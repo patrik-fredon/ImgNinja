@@ -3,13 +3,7 @@
 import { useTranslations } from "next-intl";
 import { OutputFormat } from "@/types/formats";
 import { FORMATS, getSupportedFormats } from "@/lib/converter/formats";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/Card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 
 interface FormatSelectorProps {
   selectedFormat: OutputFormat;
@@ -34,12 +28,8 @@ export function FormatSelector({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-base sm:text-lg font-semibold mb-2">
-          {t("converter.format.title")}
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">
-          {t("converter.format.selectFormat")}
-        </p>
+        <h3 className="text-base sm:text-lg font-semibold mb-2">{t("converter.format.title")}</h3>
+        <p className="text-sm text-gray-600 mb-4">{t("converter.format.selectFormat")}</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -98,18 +88,10 @@ export function FormatSelector({
                   <div className="text-xs text-gray-500">
                     <strong>Browser Support:</strong>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      <span className="text-xs">
-                        Chrome {formatData.browserSupport.chrome}
-                      </span>
-                      <span className="text-xs">
-                        • Firefox {formatData.browserSupport.firefox}
-                      </span>
-                      <span className="text-xs">
-                        • Safari {formatData.browserSupport.safari}
-                      </span>
-                      <span className="text-xs">
-                        • Edge {formatData.browserSupport.edge}
-                      </span>
+                      <span className="text-xs">Chrome {formatData.browserSupport.chrome}</span>
+                      <span className="text-xs">• Firefox {formatData.browserSupport.firefox}</span>
+                      <span className="text-xs">• Safari {formatData.browserSupport.safari}</span>
+                      <span className="text-xs">• Edge {formatData.browserSupport.edge}</span>
                     </div>
                   </div>
                 </div>

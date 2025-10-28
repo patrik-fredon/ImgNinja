@@ -225,6 +225,87 @@
     },
     "lastUpdated": "Naposledy aktualizováno: říjen 2024"
   },
+  "hero": {
+    "title": "Převádějte obrázky okamžitě",
+    "subtitle": "Profesionální konverze obrázků bez nahrávání. Rychlá, bezpečná a zcela soukromá - veškeré zpracování probíhá ve vašem prohlížeči.",
+    "stats": {
+      "conversions": "Převedených obrázků",
+      "users": "Spokojených uživatelů",
+      "privacy": "Zaručené soukromí",
+      "uploads": "Nahrávání na server"
+    },
+    "features": {
+      "privacy": {
+        "title": "100% soukromé",
+        "description": "Vaše obrázky nikdy neopustí vaše zařízení. Veškeré zpracování probíhá lokálně ve vašem prohlížeči."
+      },
+      "speed": {
+        "title": "Bleskově rychlé",
+        "description": "Okamžitá konverze s Web Workers. Žádné čekání, žádné zpoždění, jen výsledky."
+      },
+      "quality": {
+        "title": "Profesionální kvalita",
+        "description": "Pokročilé algoritmy zajišťují perfektní výsledky pokaždé s přizpůsobitelnými nastaveními."
+      }
+    },
+    "cta": {
+      "primary": "Začít převádět",
+      "secondary": "Zjistit více"
+    },
+    "trust": {
+      "title": "Podporuje všechny hlavní formáty"
+    }
+  },
+  "tour": {
+    "step": "Krok",
+    "of": "z",
+    "previous": "Předchozí",
+    "next": "Další",
+    "skip": "Přeskočit",
+    "finish": "Dokončit",
+    "steps": {
+      "upload": {
+        "title": "Nahrajte své obrázky",
+        "content": "Přetáhněte obrázky sem nebo klikněte pro výběr. Podporujeme všechny hlavní formáty včetně PNG, JPEG, WebP, AVIF a dalších."
+      },
+      "format": {
+        "title": "Vyberte výstupní formát",
+        "content": "Vyberte formát, do kterého chcete převést. Ukážeme vám doporučení na základě typu obrázku a zamýšleného použití."
+      },
+      "quality": {
+        "title": "Upravte nastavení kvality",
+        "content": "Dolaďte kvalitu a nastavení komprese. Vyšší kvalita znamená větší velikost souborů, zatímco nižší kvalita snižuje velikost souboru."
+      },
+      "convert": {
+        "title": "Spusťte konverzi",
+        "content": "Klikněte zde pro spuštění procesu konverze. Veškeré zpracování probíhá ve vašem prohlížeči - vaše obrázky nikdy neopustí vaše zařízení."
+      }
+    }
+  },
+  "introduction": {
+    "welcome": "Vítejte v ImgNinja!",
+    "subtitle": "Ukažme vám, jak vytěžit maximum z našeho konvertoru obrázků",
+    "startTour": "Spustit prohlídku",
+    "skipTour": "Přeskočit a začít převádět"
+  },
+  "features": {
+    "privacy": {
+      "title": "100% soukromé zpracování",
+      "description": "Vaše obrázky nikdy neopustí vaše zařízení. Veškerá konverze probíhá lokálně ve vašem prohlížeči pro úplné soukromí."
+    },
+    "speed": {
+      "title": "Bleskově rychlá konverze",
+      "description": "Poháněno Web Workers pro okamžité výsledky. Žádné čekání, žádné zpoždění - jen rychlé, efektivní zpracování."
+    },
+    "quality": {
+      "title": "Profesionální kvalita",
+      "description": "Pokročilé algoritmy zajišťují perfektní výsledky s přizpůsobitelnými nastaveními kvality pro každé použití."
+    },
+    "batch": {
+      "title": "Dávkové zpracování",
+      "description": "Převádějte více obrázků najednou s naším inteligentním systémem fronty. Stahujte jednotlivě nebo jako ZIP soubor."
+    }
+  },
   "errors": {
     "boundary": {
       "title": "Něco se pokazilo",

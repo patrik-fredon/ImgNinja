@@ -1,14 +1,8 @@
 "use client";
 
-import { lazy, Suspense } from "react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { withLazyLoading } from "@/lib/utils/lazy-wrapper";
 import type { OutputFormat } from "@/types/formats";
-
-const QualityControl = lazy(() =>
-  import("./QualityControl").then((module) => ({
-    default: module.QualityControl,
-  }))
-);
 
 interface LazyQualityControlProps {
   quality: number;
@@ -36,10 +30,8 @@ function QualityControlSkeleton() {
   );
 }
 
-export function LazyQualityControl(props: LazyQualityControlProps) {
-  return (
-    <Suspense fallback={<QualityControlSkeleton />}>
-      <QualityControl {...props} />
-    </Suspense>
-  );
-}
+export const LazyQualityControl = withLazyLoading<LazyQualityControlProps>(
+  () => import("./QualityControl"),
+  QualityControlSkeleton,
+  "QualityControl"
+);

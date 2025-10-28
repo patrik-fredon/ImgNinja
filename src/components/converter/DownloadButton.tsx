@@ -31,14 +31,11 @@ export function DownloadButton({
 }: DownloadButtonProps) {
   const t = useTranslations();
 
-  const generateFileName = useCallback(
-    (originalName: string, format: OutputFormat): string => {
-      const formatData = FORMATS[format];
-      const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
-      return `${nameWithoutExt}${formatData.extension}`;
-    },
-    []
-  );
+  const generateFileName = useCallback((originalName: string, format: OutputFormat): string => {
+    const formatData = FORMATS[format];
+    const nameWithoutExt = originalName.replace(/\.[^/.]+$/, "");
+    return `${nameWithoutExt}${formatData.extension}`;
+  }, []);
 
   const downloadSingleFile = useCallback(
     (file: DownloadableFile) => {
@@ -114,12 +111,7 @@ export function DownloadButton({
   }
 
   return (
-    <Button
-      variant={variant}
-      size={size}
-      onClick={handleDownload}
-      className={className}
-    >
+    <Button variant={variant} size={size} onClick={handleDownload} className={className}>
       {getButtonText()}
     </Button>
   );

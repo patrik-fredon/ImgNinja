@@ -17,10 +17,7 @@ interface ErrorBoundaryProps {
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-class ErrorBoundaryClass extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+class ErrorBoundaryClass extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -57,9 +54,7 @@ class ErrorBoundaryClass extends Component<
         return this.props.fallback;
       }
 
-      return (
-        <ErrorFallback error={this.state.error} onReset={this.handleReset} />
-      );
+      return <ErrorFallback error={this.state.error} onReset={this.handleReset} />;
     }
 
     return this.props.children;
@@ -93,12 +88,8 @@ function ErrorFallback({ error, onReset }: ErrorFallbackProps) {
           </svg>
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-medium text-red-800">
-            {t("boundary.title")}
-          </h3>
-          <p className="mt-2 text-sm text-red-700">
-            {t("boundary.description")}
-          </p>
+          <h3 className="text-lg font-medium text-red-800">{t("boundary.title")}</h3>
+          <p className="mt-2 text-sm text-red-700">{t("boundary.description")}</p>
           {process.env.NODE_ENV === "development" && error && (
             <details className="mt-4">
               <summary className="text-sm font-medium text-red-800 cursor-pointer">

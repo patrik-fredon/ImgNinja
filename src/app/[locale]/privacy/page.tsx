@@ -11,9 +11,7 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({
-  params,
-}: PrivacyPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PrivacyPageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "privacy" });
 
@@ -42,17 +40,11 @@ export default async function PrivacyPage({ params }: PrivacyPageProps) {
       <div className="prose prose-lg max-w-none">
         {/* Client-Side Processing Section */}
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            {t("clientSide.title")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{t("clientSide.title")}</h2>
           <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-green-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -61,9 +53,7 @@ export default async function PrivacyPage({ params }: PrivacyPageProps) {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-green-700 font-medium">
-                  {t("clientSide.guarantee")}
-                </p>
+                <p className="text-sm text-green-700 font-medium">{t("clientSide.guarantee")}</p>
               </div>
             </div>
           </div>
@@ -78,17 +68,11 @@ export default async function PrivacyPage({ params }: PrivacyPageProps) {
 
         {/* Data Handling Section */}
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            {t("dataHandling.title")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{t("dataHandling.title")}</h2>
           <p className="text-gray-700 mb-4">{t("dataHandling.description")}</p>
 
-          <h3 className="text-xl font-medium mb-3">
-            {t("dataHandling.browserStorage.title")}
-          </h3>
-          <p className="text-gray-700 mb-4">
-            {t("dataHandling.browserStorage.description")}
-          </p>
+          <h3 className="text-xl font-medium mb-3">{t("dataHandling.browserStorage.title")}</h3>
+          <p className="text-gray-700 mb-4">{t("dataHandling.browserStorage.description")}</p>
           <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
             <li>{t("dataHandling.browserStorage.point1")}</li>
             <li>{t("dataHandling.browserStorage.point2")}</li>
@@ -96,12 +80,8 @@ export default async function PrivacyPage({ params }: PrivacyPageProps) {
             <li>{t("dataHandling.browserStorage.point4")}</li>
           </ul>
 
-          <h3 className="text-xl font-medium mb-3">
-            {t("dataHandling.dataClearing.title")}
-          </h3>
-          <p className="text-gray-700 mb-4">
-            {t("dataHandling.dataClearing.description")}
-          </p>
+          <h3 className="text-xl font-medium mb-3">{t("dataHandling.dataClearing.title")}</h3>
+          <p className="text-gray-700 mb-4">{t("dataHandling.dataClearing.description")}</p>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
             <h4 className="font-medium text-blue-900 mb-2">
               {t("dataHandling.dataClearing.howTo.title")}
@@ -117,29 +97,19 @@ export default async function PrivacyPage({ params }: PrivacyPageProps) {
 
         {/* Third-Party Integrations Section */}
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            {t("thirdParty.title")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{t("thirdParty.title")}</h2>
           <p className="text-gray-700 mb-4">{t("thirdParty.description")}</p>
 
-          <h3 className="text-xl font-medium mb-3">
-            {t("thirdParty.googleAds.title")}
-          </h3>
-          <p className="text-gray-700 mb-4">
-            {t("thirdParty.googleAds.description")}
-          </p>
+          <h3 className="text-xl font-medium mb-3">{t("thirdParty.googleAds.title")}</h3>
+          <p className="text-gray-700 mb-4">{t("thirdParty.googleAds.description")}</p>
           <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
             <li>{t("thirdParty.googleAds.point1")}</li>
             <li>{t("thirdParty.googleAds.point2")}</li>
             <li>{t("thirdParty.googleAds.point3")}</li>
           </ul>
 
-          <h3 className="text-xl font-medium mb-3">
-            {t("thirdParty.analytics.title")}
-          </h3>
-          <p className="text-gray-700 mb-4">
-            {t("thirdParty.analytics.description")}
-          </p>
+          <h3 className="text-xl font-medium mb-3">{t("thirdParty.analytics.title")}</h3>
+          <p className="text-gray-700 mb-4">{t("thirdParty.analytics.description")}</p>
           <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
             <li>{t("thirdParty.analytics.point1")}</li>
             <li>{t("thirdParty.analytics.point2")}</li>
@@ -149,38 +119,22 @@ export default async function PrivacyPage({ params }: PrivacyPageProps) {
 
         {/* Technical Implementation Section */}
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            {t("technical.title")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{t("technical.title")}</h2>
           <p className="text-gray-700 mb-4">{t("technical.description")}</p>
 
-          <h3 className="text-xl font-medium mb-3">
-            {t("technical.webWorkers.title")}
-          </h3>
-          <p className="text-gray-700 mb-4">
-            {t("technical.webWorkers.description")}
-          </p>
+          <h3 className="text-xl font-medium mb-3">{t("technical.webWorkers.title")}</h3>
+          <p className="text-gray-700 mb-4">{t("technical.webWorkers.description")}</p>
 
-          <h3 className="text-xl font-medium mb-3">
-            {t("technical.canvasApi.title")}
-          </h3>
-          <p className="text-gray-700 mb-4">
-            {t("technical.canvasApi.description")}
-          </p>
+          <h3 className="text-xl font-medium mb-3">{t("technical.canvasApi.title")}</h3>
+          <p className="text-gray-700 mb-4">{t("technical.canvasApi.description")}</p>
 
-          <h3 className="text-xl font-medium mb-3">
-            {t("technical.fileApi.title")}
-          </h3>
-          <p className="text-gray-700 mb-4">
-            {t("technical.fileApi.description")}
-          </p>
+          <h3 className="text-xl font-medium mb-3">{t("technical.fileApi.title")}</h3>
+          <p className="text-gray-700 mb-4">{t("technical.fileApi.description")}</p>
         </section>
 
         {/* User Rights Section */}
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            {t("userRights.title")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{t("userRights.title")}</h2>
           <p className="text-gray-700 mb-4">{t("userRights.description")}</p>
           <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
             <li>{t("userRights.point1")}</li>

@@ -41,12 +41,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 
     return (
-      <button
-        ref={ref}
-        className={classes}
-        disabled={disabled || loading}
-        {...props}
-      >
+      <button ref={ref} className={classes} disabled={disabled || loading} {...props}>
         {loading && (
           <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
             <circle

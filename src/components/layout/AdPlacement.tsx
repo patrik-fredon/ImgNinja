@@ -34,11 +34,7 @@ declare global {
   }
 }
 
-export function AdPlacement({
-  slot,
-  adUnitId,
-  className = "",
-}: AdPlacementProps) {
+export function AdPlacement({ slot, adUnitId, className = "" }: AdPlacementProps) {
   const adRef = useRef<HTMLModElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -83,13 +79,11 @@ export function AdPlacement({
       await new Promise<void>((resolve, reject) => {
         const script = document.createElement("script");
         script.async = true;
-        script.src =
-          "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+        script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
         script.crossOrigin = "anonymous";
 
         script.onload = () => resolve();
-        script.onerror = () =>
-          reject(new Error("Failed to load Google Ads script"));
+        script.onerror = () => reject(new Error("Failed to load Google Ads script"));
 
         document.head.appendChild(script);
       });
@@ -203,9 +197,7 @@ export function AdPlacement({
       ) : (
         // Fallback placeholder when no ad unit ID is provided
         <div className="flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md w-full h-full min-h-[50px]">
-          <span className="text-xs sm:text-sm text-gray-500">
-            Advertisement
-          </span>
+          <span className="text-xs sm:text-sm text-gray-500">Advertisement</span>
         </div>
       )}
     </div>

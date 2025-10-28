@@ -1,14 +1,8 @@
 "use client";
 
-import { lazy, Suspense } from "react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { withLazyLoading } from "@/lib/utils/lazy-wrapper";
 import type { ConversionItem } from "./ConversionQueue";
-
-const ConversionQueue = lazy(() =>
-  import("./ConversionQueue").then((module) => ({
-    default: module.ConversionQueue,
-  }))
-);
 
 interface LazyConversionQueueProps {
   items: ConversionItem[];
@@ -39,10 +33,8 @@ function ConversionQueueSkeleton() {
   );
 }
 
-export function LazyConversionQueue(props: LazyConversionQueueProps) {
-  return (
-    <Suspense fallback={<ConversionQueueSkeleton />}>
-      <ConversionQueue {...props} />
-    </Suspense>
-  );
-}
+export const LazyConversionQueue = withLazyLoading<LazyConversionQueueProps>(
+  () => import("./ConversionQueue"),
+  ConversionQueueSkeleton,
+  "ConversionQueue"
+);

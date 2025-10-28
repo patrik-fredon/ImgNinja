@@ -19,13 +19,8 @@ export function ErrorList() {
   return (
     <div className="space-y-3">
       {errors.map((error, index) => {
-        let errorType:
-          | "validation"
-          | "conversion"
-          | "browser"
-          | "file"
-          | "network"
-          | "generic" = "generic";
+        let errorType: "validation" | "conversion" | "browser" | "file" | "network" | "generic" =
+          "generic";
 
         if (isValidationError(error)) {
           errorType = "validation";

@@ -64,11 +64,7 @@ export function ConversionQueue({
         );
       case "processing":
         return (
-          <svg
-            className="w-5 h-5 text-blue-500 animate-spin"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-5 h-5 text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
               cx="12"
@@ -164,20 +160,25 @@ export function ConversionQueue({
                   <div className="flex items-center space-x-3 min-w-0 flex-1">
                     {getStatusIcon(item.status)}
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {item.file.name}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900 truncate">{item.file.name}</p>
                       <div className="flex items-center space-x-2 text-xs text-gray-500">
                         <span className="font-medium">{formatFileSize(item.file.size)}</span>
                         <span>→</span>
-                        <span className={`uppercase font-bold px-2 py-0.5 rounded-md ${
-                          item.outputFormat === 'webp' ? 'bg-format-webp/20 text-format-webp' :
-                          item.outputFormat === 'avif' ? 'bg-format-avif/20 text-format-avif' :
-                          item.outputFormat === 'png' ? 'bg-format-png/20 text-format-png' :
-                          item.outputFormat === 'jpeg' ? 'bg-format-jpeg/20 text-format-jpeg' :
-                          item.outputFormat === 'gif' ? 'bg-format-gif/20 text-format-gif' :
-                          'bg-gray-200 text-gray-700'
-                        }`}>
+                        <span
+                          className={`uppercase font-bold px-2 py-0.5 rounded-md ${
+                            item.outputFormat === "webp"
+                              ? "bg-format-webp/20 text-format-webp"
+                              : item.outputFormat === "avif"
+                                ? "bg-format-avif/20 text-format-avif"
+                                : item.outputFormat === "png"
+                                  ? "bg-format-png/20 text-format-png"
+                                  : item.outputFormat === "jpeg"
+                                    ? "bg-format-jpeg/20 text-format-jpeg"
+                                    : item.outputFormat === "gif"
+                                      ? "bg-format-gif/20 text-format-gif"
+                                      : "bg-gray-200 text-gray-700"
+                          }`}
+                        >
                           {item.outputFormat}
                         </span>
                         {item.outputSize && (
@@ -210,8 +211,7 @@ export function ConversionQueue({
                 </div>
 
                 {/* Progress bar */}
-                {(item.status === "processing" ||
-                  item.status === "complete") && (
+                {(item.status === "processing" || item.status === "complete") && (
                   <Progress
                     value={item.progress}
                     variant={getProgressVariant(item.status)}
@@ -222,19 +222,14 @@ export function ConversionQueue({
 
                 {/* Error message */}
                 {item.status === "error" && item.error && (
-                  <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-                    {item.error}
-                  </div>
+                  <div className="text-sm text-red-600 bg-red-50 p-2 rounded">{item.error}</div>
                 )}
 
                 {/* Status text */}
                 <div className="text-xs text-gray-500">
-                  {item.status === "pending" &&
-                    t("converter.queue.status.pending")}
-                  {item.status === "processing" &&
-                    t("converter.queue.status.processing")}
-                  {item.status === "complete" &&
-                    t("converter.queue.status.complete")}
+                  {item.status === "pending" && t("converter.queue.status.pending")}
+                  {item.status === "processing" && t("converter.queue.status.processing")}
+                  {item.status === "complete" && t("converter.queue.status.complete")}
                   {item.status === "error" && t("converter.queue.status.error")}
                 </div>
               </div>

@@ -225,6 +225,87 @@
     },
     "lastUpdated": "Last updated: October 2024"
   },
+  "hero": {
+    "title": "Transform Images Instantly",
+    "subtitle": "Professional image conversion with zero uploads. Fast, secure, and completely private - all processing happens in your browser.",
+    "stats": {
+      "conversions": "Images Converted",
+      "users": "Happy Users",
+      "privacy": "Privacy Guaranteed",
+      "uploads": "Server Uploads"
+    },
+    "features": {
+      "privacy": {
+        "title": "100% Private",
+        "description": "Your images never leave your device. All processing happens locally in your browser."
+      },
+      "speed": {
+        "title": "Lightning Fast",
+        "description": "Instant conversion with Web Workers. No waiting, no delays, just results."
+      },
+      "quality": {
+        "title": "Professional Quality",
+        "description": "Advanced algorithms ensure perfect results every time with customizable settings."
+      }
+    },
+    "cta": {
+      "primary": "Start Converting",
+      "secondary": "Learn More"
+    },
+    "trust": {
+      "title": "Supports all major formats"
+    }
+  },
+  "tour": {
+    "step": "Step",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next",
+    "skip": "Skip",
+    "finish": "Finish",
+    "steps": {
+      "upload": {
+        "title": "Upload Your Images",
+        "content": "Drag and drop your images here or click to browse. We support all major formats including PNG, JPEG, WebP, AVIF, and more."
+      },
+      "format": {
+        "title": "Choose Output Format",
+        "content": "Select the format you want to convert to. We'll show you recommendations based on your image type and intended use."
+      },
+      "quality": {
+        "title": "Adjust Quality Settings",
+        "content": "Fine-tune the quality and compression settings. Higher quality means larger file sizes, while lower quality reduces file size."
+      },
+      "convert": {
+        "title": "Start Converting",
+        "content": "Click here to start the conversion process. All processing happens in your browser - your images never leave your device."
+      }
+    }
+  },
+  "introduction": {
+    "welcome": "Welcome to ImgNinja!",
+    "subtitle": "Let us show you how to get the most out of our image converter",
+    "startTour": "Take the Tour",
+    "skipTour": "Skip and Start Converting"
+  },
+  "features": {
+    "privacy": {
+      "title": "100% Private Processing",
+      "description": "Your images never leave your device. All conversion happens locally in your browser for complete privacy."
+    },
+    "speed": {
+      "title": "Lightning Fast Conversion",
+      "description": "Powered by Web Workers for instant results. No waiting, no delays - just fast, efficient processing."
+    },
+    "quality": {
+      "title": "Professional Quality",
+      "description": "Advanced algorithms ensure perfect results with customizable quality settings for every use case."
+    },
+    "batch": {
+      "title": "Batch Processing",
+      "description": "Convert multiple images at once with our intelligent queue system. Download individually or as a ZIP file."
+    }
+  },
   "errors": {
     "boundary": {
       "title": "Something went wrong",

@@ -6,15 +6,13 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  (
-    { className = "", variant = "default", padding = "md", children, ...props },
-    ref
-  ) => {
+  ({ className = "", variant = "default", padding = "md", children, ...props }, ref) => {
     const baseClasses = "rounded-xl transition-all duration-200";
 
     const variantClasses = {
       default: "bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md",
-      outlined: "bg-white/80 backdrop-blur-sm border-2 border-gray-200 hover:border-brand-300 hover:shadow-sm",
+      outlined:
+        "bg-white/80 backdrop-blur-sm border-2 border-gray-200 hover:border-brand-300 hover:shadow-sm",
       elevated: "bg-white shadow-lg hover:shadow-xl",
     };
 
@@ -102,11 +100,7 @@ interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {}
 const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className = "", children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={`mt-4 flex items-center ${className}`}
-        {...props}
-      >
+      <div ref={ref} className={`mt-4 flex items-center ${className}`} {...props}>
         {children}
       </div>
     );
@@ -115,14 +109,7 @@ const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
 
 CardFooter.displayName = "CardFooter";
 
-export {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-};
+export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
 export type {
   CardProps,
   CardHeaderProps,

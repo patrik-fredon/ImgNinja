@@ -60,23 +60,16 @@ export function QualityControl({
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm sm:text-base">
-          {t("converter.quality.title")}
-        </CardTitle>
+        <CardTitle className="text-sm sm:text-base">{t("converter.quality.title")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label
-              htmlFor="quality-slider"
-              className="text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="quality-slider" className="text-sm font-medium text-gray-700">
               {t("converter.quality.label", { value: localQuality })}
             </label>
-            <span className="text-sm text-gray-500 font-mono">
-              {localQuality}%
-            </span>
+            <span className="text-sm text-gray-500 font-mono">{localQuality}%</span>
           </div>
 
           <input

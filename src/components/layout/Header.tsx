@@ -57,9 +57,7 @@ export function Header() {
                   />
                 </svg>
               </div>
-              <span className="text-lg sm:text-xl font-bold text-gray-900 truncate">
-                ImgNinja
-              </span>
+              <span className="text-lg sm:text-xl font-bold text-gray-900 truncate">ImgNinja</span>
             </button>
           </div>
 

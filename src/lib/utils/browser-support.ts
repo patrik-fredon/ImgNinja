@@ -1,11 +1,11 @@
-import type { OutputFormat } from '@/types/formats';
+import type { OutputFormat } from "@/types/formats";
 
 /**
  * Detects browser support for image formats using Canvas API
  * @returns Record mapping each format to its support status
  */
 export function detectFormatSupport(): Record<OutputFormat, boolean> {
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
+  if (typeof window === "undefined" || typeof document === "undefined") {
     return {
       webp: false,
       avif: false,
@@ -15,13 +15,13 @@ export function detectFormatSupport(): Record<OutputFormat, boolean> {
     };
   }
 
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = 1;
   canvas.height = 1;
 
   return {
-    webp: canvas.toDataURL('image/webp').startsWith('data:image/webp'),
-    avif: canvas.toDataURL('image/avif').startsWith('data:image/avif'),
+    webp: canvas.toDataURL("image/webp").startsWith("data:image/webp"),
+    avif: canvas.toDataURL("image/avif").startsWith("data:image/avif"),
     png: true,
     jpeg: true,
     gif: true,
@@ -33,7 +33,7 @@ export function detectFormatSupport(): Record<OutputFormat, boolean> {
  * @returns true if Web Workers are supported
  */
 export function supportsWebWorker(): boolean {
-  return typeof Worker !== 'undefined';
+  return typeof Worker !== "undefined";
 }
 
 /**
@@ -41,5 +41,5 @@ export function supportsWebWorker(): boolean {
  * @returns true if OffscreenCanvas is supported
  */
 export function supportsOffscreenCanvas(): boolean {
-  return typeof OffscreenCanvas !== 'undefined';
+  return typeof OffscreenCanvas !== "undefined";
 }

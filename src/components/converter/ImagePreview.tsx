@@ -25,9 +25,7 @@ export function ImagePreview({
   return (
     <Card variant="outlined" className={`${className} animate-fade-in`}>
       <CardHeader>
-        <CardTitle className="text-base font-semibold">
-          Preview Comparison
-        </CardTitle>
+        <CardTitle className="text-base font-semibold">Preview Comparison</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Toggle Buttons */}
@@ -79,18 +77,12 @@ export function ImagePreview({
         {/* Image Info */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <p className="text-gray-500 mb-1">
-              Original
-            </p>
-            <p className="font-bold text-gray-900">
-              {(originalFile.size / 1024).toFixed(1)} KB
-            </p>
+            <p className="text-gray-500 mb-1">Original</p>
+            <p className="font-bold text-gray-900">{(originalFile.size / 1024).toFixed(1)} KB</p>
           </div>
           {convertedBlob && (
             <div className="text-center p-3 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg">
-              <p className="text-emerald-700 mb-1">
-                Converted
-              </p>
+              <p className="text-emerald-700 mb-1">Converted</p>
               <p className="font-bold text-emerald-900">
                 {(convertedBlob.size / 1024).toFixed(1)} KB
               </p>

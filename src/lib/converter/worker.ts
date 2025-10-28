@@ -1,5 +1,5 @@
 interface ConversionMessage {
-  type: 'CONVERT';
+  type: "CONVERT";
   id: string;
   file: File;
   options: {
@@ -13,13 +13,13 @@ interface ConversionMessage {
 }
 
 interface ProgressMessage {
-  type: 'PROGRESS';
+  type: "PROGRESS";
   id: string;
   progress: number;
 }
 
 interface SuccessMessage {
-  type: 'SUCCESS';
+  type: "SUCCESS";
   id: string;
   blob: Blob;
   size: number;
@@ -29,7 +29,7 @@ interface SuccessMessage {
 }
 
 interface ErrorMessage {
-  type: 'ERROR';
+  type: "ERROR";
   id: string;
   error: string;
 }
@@ -68,7 +68,7 @@ self.onmessage = async (e: MessageEvent<ConversionMessage>) => {
 
   try {
     self.postMessage({
-      type: 'PROGRESS',
+      type: "PROGRESS",
       id,
       progress: 10,
     } as ProgressMessage);
@@ -76,7 +76,7 @@ self.onmessage = async (e: MessageEvent<ConversionMessage>) => {
     const bitmap = await createImageBitmap(file);
 
     self.postMessage({
-      type: 'PROGRESS',
+      type: "PROGRESS",
       id,
       progress: 30,
     } as ProgressMessage);
@@ -89,14 +89,14 @@ self.onmessage = async (e: MessageEvent<ConversionMessage>) => {
     );
 
     const canvas = new OffscreenCanvas(width, height);
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
 
     if (!ctx) {
-      throw new Error('Failed to get canvas context');
+      throw new Error("Failed to get canvas context");
     }
 
     self.postMessage({
-      type: 'PROGRESS',
+      type: "PROGRESS",
       id,
       progress: 50,
     } as ProgressMessage);
@@ -105,7 +105,7 @@ self.onmessage = async (e: MessageEvent<ConversionMessage>) => {
     bitmap.close();
 
     self.postMessage({
-      type: 'PROGRESS',
+      type: "PROGRESS",
       id,
       progress: 70,
     } as ProgressMessage);
@@ -120,7 +120,7 @@ self.onmessage = async (e: MessageEvent<ConversionMessage>) => {
     const duration = performance.now() - startTime;
 
     self.postMessage({
-      type: 'SUCCESS',
+      type: "SUCCESS",
       id,
       blob,
       size: blob.size,
@@ -130,9 +130,9 @@ self.onmessage = async (e: MessageEvent<ConversionMessage>) => {
     } as SuccessMessage);
   } catch (error) {
     self.postMessage({
-      type: 'ERROR',
+      type: "ERROR",
       id,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     } as ErrorMessage);
   }
 };

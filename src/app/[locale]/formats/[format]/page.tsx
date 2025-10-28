@@ -29,9 +29,7 @@ export async function generateStaticParams() {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: FormatPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: FormatPageProps): Promise<Metadata> {
   const { format, locale } = params;
 
   if (!isValidFormat(format)) {
@@ -67,55 +65,37 @@ export default function FormatPage({ params }: FormatPageProps) {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">{formatData.name}</h1>
-        <p className="text-xl text-gray-600 mb-6">
-          {t(`${format}.description`)}
-        </p>
+        <p className="text-xl text-gray-600 mb-6">{t(`${format}.description`)}</p>
 
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-semibold mb-4">{tPage("details")}</h2>
             <dl className="space-y-3">
               <div>
-                <dt className="font-medium text-gray-700">
-                  {tPage("mimeType")}:
-                </dt>
+                <dt className="font-medium text-gray-700">{tPage("mimeType")}:</dt>
                 <dd className="text-gray-600">{formatData.mimeType}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-700">
-                  {tPage("fileExtension")}:
-                </dt>
+                <dt className="font-medium text-gray-700">{tPage("fileExtension")}:</dt>
                 <dd className="text-gray-600">{formatData.extension}</dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-700">
-                  {tPage("qualityControl")}:
-                </dt>
+                <dt className="font-medium text-gray-700">{tPage("qualityControl")}:</dt>
                 <dd className="text-gray-600">
-                  {formatData.supportsQuality
-                    ? tPage("supported")
-                    : tPage("notSupported")}
+                  {formatData.supportsQuality ? tPage("supported") : tPage("notSupported")}
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-700">
-                  {tPage("transparency")}:
-                </dt>
+                <dt className="font-medium text-gray-700">{tPage("transparency")}:</dt>
                 <dd className="text-gray-600">
-                  {formatData.supportsTransparency
-                    ? tPage("supported")
-                    : tPage("notSupported")}
+                  {formatData.supportsTransparency ? tPage("supported") : tPage("notSupported")}
                 </dd>
               </div>
               <div>
-                <dt className="font-medium text-gray-700">
-                  {tPage("recommended")}:
-                </dt>
+                <dt className="font-medium text-gray-700">{tPage("recommended")}:</dt>
                 <dd className="text-gray-600">
                   {formatData.recommended ? (
-                    <span className="text-green-600 font-medium">
-                      {tPage("yes")}
-                    </span>
+                    <span className="text-green-600 font-medium">{tPage("yes")}</span>
                   ) : (
                     <span className="text-gray-500">{tPage("no")}</span>
                   )}
@@ -138,22 +118,14 @@ export default function FormatPage({ params }: FormatPageProps) {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            {tPage("browserCompatibility")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{tPage("browserCompatibility")}</h2>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium">
-                    {tPage("browser")}
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium">
-                    {tPage("support")}
-                  </th>
-                  <th className="text-left py-3 px-4 font-medium">
-                    {tPage("status")}
-                  </th>
+                  <th className="text-left py-3 px-4 font-medium">{tPage("browser")}</th>
+                  <th className="text-left py-3 px-4 font-medium">{tPage("support")}</th>
+                  <th className="text-left py-3 px-4 font-medium">{tPage("status")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -162,9 +134,7 @@ export default function FormatPage({ params }: FormatPageProps) {
                     <span className="mr-2">🌐</span>
                     Chrome
                   </td>
-                  <td className="py-3 px-4">
-                    {formatData.browserSupport.chrome}
-                  </td>
+                  <td className="py-3 px-4">{formatData.browserSupport.chrome}</td>
                   <td className="py-3 px-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       {tPage("supported")}
@@ -176,9 +146,7 @@ export default function FormatPage({ params }: FormatPageProps) {
                     <span className="mr-2">🦊</span>
                     Firefox
                   </td>
-                  <td className="py-3 px-4">
-                    {formatData.browserSupport.firefox}
-                  </td>
+                  <td className="py-3 px-4">{formatData.browserSupport.firefox}</td>
                   <td className="py-3 px-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       {tPage("supported")}
@@ -190,9 +158,7 @@ export default function FormatPage({ params }: FormatPageProps) {
                     <span className="mr-2">🧭</span>
                     Safari
                   </td>
-                  <td className="py-3 px-4">
-                    {formatData.browserSupport.safari}
-                  </td>
+                  <td className="py-3 px-4">{formatData.browserSupport.safari}</td>
                   <td className="py-3 px-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       {tPage("supported")}
@@ -204,9 +170,7 @@ export default function FormatPage({ params }: FormatPageProps) {
                     <span className="mr-2">🌊</span>
                     Edge
                   </td>
-                  <td className="py-3 px-4">
-                    {formatData.browserSupport.edge}
-                  </td>
+                  <td className="py-3 px-4">{formatData.browserSupport.edge}</td>
                   <td className="py-3 px-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       {tPage("supported")}
@@ -219,20 +183,16 @@ export default function FormatPage({ params }: FormatPageProps) {
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">
-            {tPage("conversionExamples")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{tPage("conversionExamples")}</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-lg font-medium mb-3">
                 {tPage("convertTo", { format: formatData.name })}
               </h3>
               <ul className="list-disc list-inside text-gray-600 space-y-2">
-                {getConversionRecommendations(format, "to").map(
-                  (rec, index) => (
-                    <li key={index}>{rec}</li>
-                  )
-                )}
+                {getConversionRecommendations(format, "to").map((rec, index) => (
+                  <li key={index}>{rec}</li>
+                ))}
               </ul>
             </div>
             <div>
@@ -240,25 +200,19 @@ export default function FormatPage({ params }: FormatPageProps) {
                 {tPage("convertFrom", { format: formatData.name })}
               </h3>
               <ul className="list-disc list-inside text-gray-600 space-y-2">
-                {getConversionRecommendations(format, "from").map(
-                  (rec, index) => (
-                    <li key={index}>{rec}</li>
-                  )
-                )}
+                {getConversionRecommendations(format, "from").map((rec, index) => (
+                  <li key={index}>{rec}</li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
 
         <div className="bg-blue-50 rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4">
-            {tPage("technicalSpecs")}
-          </h2>
+          <h2 className="text-2xl font-semibold mb-4">{tPage("technicalSpecs")}</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-medium mb-3">
-                {tPage("compression")}
-              </h3>
+              <h3 className="text-lg font-medium mb-3">{tPage("compression")}</h3>
               <p className="text-gray-700 mb-2">{getCompressionInfo(format)}</p>
             </div>
             <div>
@@ -314,10 +268,7 @@ function getUseCases(format: OutputFormat): string[] {
   }
 }
 
-function getConversionRecommendations(
-  format: OutputFormat,
-  direction: "to" | "from"
-): string[] {
+function getConversionRecommendations(format: OutputFormat, direction: "to" | "from"): string[] {
   if (direction === "to") {
     switch (format) {
       case "webp":

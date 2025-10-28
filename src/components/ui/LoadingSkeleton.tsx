@@ -16,12 +16,7 @@ export function LoadingSkeleton({
       return (
         <div className={`space-y-2 ${className}`}>
           {Array.from({ length: lines }).map((_, i) => (
-            <div
-              key={i}
-              className={`${baseClasses} h-4 ${
-                i === lines - 1 ? "w-3/4" : "w-full"
-              }`}
-            />
+            <div key={i} className={`${baseClasses} h-4 ${i === lines - 1 ? "w-3/4" : "w-full"}`} />
           ))}
         </div>
       );

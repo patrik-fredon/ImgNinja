@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useCallback,
-  useState,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useCallback, useState, ReactNode } from "react";
 import { AppError, ErrorWithRecovery } from "./types";
 import { getRecoveryActions, logError } from "./handlers";
 import type { OutputFormat } from "@/types/formats";
@@ -36,19 +30,16 @@ interface ErrorProviderProps {
 export function ErrorProvider({ children }: ErrorProviderProps) {
   const [errors, setErrors] = useState<ErrorWithRecovery[]>([]);
 
-  const addError = useCallback(
-    (error: AppError, recoveryContext?: RecoveryContext) => {
-      logError(error);
+  const addError = useCallback((error: AppError, recoveryContext?: RecoveryContext) => {
+    logError(error);
 
-      const errorWithRecovery: ErrorWithRecovery = {
-        ...error,
-        recoveryActions: getRecoveryActions(error, recoveryContext),
-      };
+    const errorWithRecovery: ErrorWithRecovery = {
+      ...error,
+      recoveryActions: getRecoveryActions(error, recoveryContext),
+    };
 
-      setErrors((prev) => [...prev, errorWithRecovery]);
-    },
-    []
-  );
+    setErrors((prev) => [...prev, errorWithRecovery]);
+  }, []);
 
   const removeError = useCallback((index: number) => {
     setErrors((prev) => prev.filter((_, i) => i !== index));
@@ -65,9 +56,7 @@ export function ErrorProvider({ children }: ErrorProviderProps) {
     clearErrors,
   };
 
-  return (
-    <ErrorContext.Provider value={value}>{children}</ErrorContext.Provider>
-  );
+  return <ErrorContext.Provider value={value}>{children}</ErrorContext.Provider>;
 }
 
 export function useErrors() {

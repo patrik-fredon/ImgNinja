@@ -4,13 +4,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "./Button";
 import { Card } from "./Card";
 
-export type ErrorType =
-  | "validation"
-  | "conversion"
-  | "browser"
-  | "network"
-  | "file"
-  | "generic";
+export type ErrorType = "validation" | "conversion" | "browser" | "network" | "file" | "generic";
 
 export interface ErrorDisplayProps {
   type: ErrorType;
@@ -37,47 +31,45 @@ const ERROR_ICONS: Record<ErrorType, string> = {
     "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z",
 };
 
-const ERROR_COLORS: Record<
-  ErrorType,
-  { bg: string; border: string; text: string; icon: string }
-> = {
-  validation: {
-    bg: "bg-yellow-50",
-    border: "border-yellow-200",
-    text: "text-yellow-800",
-    icon: "text-yellow-600",
-  },
-  conversion: {
-    bg: "bg-red-50",
-    border: "border-red-200",
-    text: "text-red-800",
-    icon: "text-red-600",
-  },
-  browser: {
-    bg: "bg-blue-50",
-    border: "border-blue-200",
-    text: "text-blue-800",
-    icon: "text-blue-600",
-  },
-  network: {
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    text: "text-purple-800",
-    icon: "text-purple-600",
-  },
-  file: {
-    bg: "bg-orange-50",
-    border: "border-orange-200",
-    text: "text-orange-800",
-    icon: "text-orange-600",
-  },
-  generic: {
-    bg: "bg-gray-50",
-    border: "border-gray-200",
-    text: "text-gray-800",
-    icon: "text-gray-600",
-  },
-};
+const ERROR_COLORS: Record<ErrorType, { bg: string; border: string; text: string; icon: string }> =
+  {
+    validation: {
+      bg: "bg-yellow-50",
+      border: "border-yellow-200",
+      text: "text-yellow-800",
+      icon: "text-yellow-600",
+    },
+    conversion: {
+      bg: "bg-red-50",
+      border: "border-red-200",
+      text: "text-red-800",
+      icon: "text-red-600",
+    },
+    browser: {
+      bg: "bg-blue-50",
+      border: "border-blue-200",
+      text: "text-blue-800",
+      icon: "text-blue-600",
+    },
+    network: {
+      bg: "bg-purple-50",
+      border: "border-purple-200",
+      text: "text-purple-800",
+      icon: "text-purple-600",
+    },
+    file: {
+      bg: "bg-orange-50",
+      border: "border-orange-200",
+      text: "text-orange-800",
+      icon: "text-orange-600",
+    },
+    generic: {
+      bg: "bg-gray-50",
+      border: "border-gray-200",
+      text: "text-gray-800",
+      icon: "text-gray-600",
+    },
+  };
 
 export function ErrorDisplay({
   type,
@@ -101,31 +93,20 @@ export function ErrorDisplay({
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={iconPath}
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={iconPath} />
           </svg>
         </div>
 
         <div className="flex-1 min-w-0">
-          <h4 className={`text-sm font-medium ${colors.text}`}>
-            {t(`types.${type}.title`)}
-          </h4>
+          <h4 className={`text-sm font-medium ${colors.text}`}>{t(`types.${type}.title`)}</h4>
           <p className={`mt-1 text-sm ${colors.text}`}>{message}</p>
 
           {details && (
             <details className="mt-2">
-              <summary
-                className={`text-xs font-medium ${colors.text} cursor-pointer`}
-              >
+              <summary className={`text-xs font-medium ${colors.text} cursor-pointer`}>
                 {t("showDetails")}
               </summary>
-              <p className={`mt-1 text-xs ${colors.text} opacity-75`}>
-                {details}
-              </p>
+              <p className={`mt-1 text-xs ${colors.text} opacity-75`}>{details}</p>
             </details>
           )}
 
@@ -165,12 +146,7 @@ export function ErrorDisplay({
             className={`shrink-0 ${colors.text} hover:opacity-75`}
             aria-label={t("dismiss")}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

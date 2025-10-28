@@ -1,4 +1,4 @@
-export type OutputFormat = 'webp' | 'avif' | 'png' | 'jpeg' | 'gif';
+export type OutputFormat = "webp" | "avif" | "png" | "jpeg" | "gif";
 
 export interface FormatMetadata {
   id: OutputFormat;

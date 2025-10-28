@@ -1,14 +1,8 @@
 "use client";
 
-import { lazy, Suspense } from "react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { withLazyLoading } from "@/lib/utils/lazy-wrapper";
 import type { OutputFormat } from "@/types/formats";
-
-const FormatSelector = lazy(() =>
-  import("./FormatSelector").then((module) => ({
-    default: module.FormatSelector,
-  }))
-);
 
 interface LazyFormatSelectorProps {
   selectedFormat: OutputFormat;
@@ -25,10 +19,7 @@ function FormatSelectorSkeleton() {
             <LoadingSkeleton variant="text" lines={1} className="w-16" />
             <LoadingSkeleton variant="text" lines={2} className="w-full" />
             <div className="flex items-center space-x-2">
-              <LoadingSkeleton
-                variant="button"
-                className="w-4 h-4 rounded-full"
-              />
+              <LoadingSkeleton variant="button" className="w-4 h-4 rounded-full" />
               <LoadingSkeleton variant="text" lines={1} className="w-20" />
             </div>
           </div>
@@ -38,10 +29,8 @@ function FormatSelectorSkeleton() {
   );
 }
 
-export function LazyFormatSelector(props: LazyFormatSelectorProps) {
-  return (
-    <Suspense fallback={<FormatSelectorSkeleton />}>
-      <FormatSelector {...props} />
-    </Suspense>
-  );
-}
+export const LazyFormatSelector = withLazyLoading<LazyFormatSelectorProps>(
+  () => import("./FormatSelector"),
+  FormatSelectorSkeleton,
+  "FormatSelector"
+);

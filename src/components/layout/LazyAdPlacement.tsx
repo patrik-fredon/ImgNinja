@@ -20,17 +20,11 @@ const AD_SLOT_DIMENSIONS = {
   footer: "w-[728px] h-[90px]",
 };
 
-export function LazyAdPlacement({
-  slot,
-  adUnitId,
-  className,
-}: LazyAdPlacementProps) {
+export function LazyAdPlacement({ slot, adUnitId, className }: LazyAdPlacementProps) {
   const skeletonClasses = `${AD_SLOT_DIMENSIONS[slot]} ${className}`;
 
   return (
-    <Suspense
-      fallback={<LoadingSkeleton variant="card" className={skeletonClasses} />}
-    >
+    <Suspense fallback={<LoadingSkeleton variant="card" className={skeletonClasses} />}>
       <AdPlacement slot={slot} adUnitId={adUnitId} className={className} />
     </Suspense>
   );
