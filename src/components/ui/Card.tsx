@@ -10,12 +10,12 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     { className = "", variant = "default", padding = "md", children, ...props },
     ref
   ) => {
-    const baseClasses = "rounded-lg";
+    const baseClasses = "rounded-xl transition-all duration-200";
 
     const variantClasses = {
-      default: "bg-white",
-      outlined: "bg-white border border-gray-200",
-      elevated: "bg-white shadow-md",
+      default: "bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md",
+      outlined: "bg-white/80 backdrop-blur-sm border-2 border-gray-200 hover:border-brand-300 hover:shadow-sm",
+      elevated: "bg-white shadow-lg hover:shadow-xl",
     };
 
     const paddingClasses = {

@@ -160,21 +160,23 @@ export function FileUpload({
     <div className={className}>
       <Card
         variant="outlined"
-        className={`transition-colors ${
-          isDragOver ? "border-blue-500 bg-blue-50" : "border-gray-300"
+        className={`transition-all duration-300 ${
+          isDragOver
+            ? "border-brand-500 bg-gradient-to-br from-brand-50 to-accent-purple/10 shadow-lg scale-[1.02]"
+            : "border-gray-300 hover:border-brand-300 hover:shadow-md"
         }`}
       >
         <CardContent
-          className="p-6 sm:p-8 text-center cursor-pointer touch-manipulation"
+          className="p-8 sm:p-10 text-center cursor-pointer touch-manipulation"
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={handleBrowseClick}
         >
-          <div className="space-y-3 sm:space-y-4">
-            <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center">
+          <div className="space-y-4 sm:space-y-6">
+            <div className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-accent-purple/20 rounded-2xl flex items-center justify-center transition-all duration-300 ${isDragOver ? "scale-110 rotate-6" : ""}`}>
               <svg
-                className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
+                className={`w-8 h-8 sm:w-10 sm:h-10 transition-colors duration-300 ${isDragOver ? "text-brand-600" : "text-brand-500"}`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -189,10 +191,10 @@ export function FileUpload({
             </div>
 
             <div>
-              <p className="text-base sm:text-lg font-medium text-gray-900">
+              <p className="text-lg sm:text-xl font-semibold bg-gradient-brand bg-clip-text text-transparent">
                 {t("converter.upload.dragDrop")}
               </p>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-base text-gray-600 mt-2 font-medium">
                 {t("converter.upload.orClick")}
               </p>
             </div>

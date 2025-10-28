@@ -20,22 +20,22 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses =
-      "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 touch-manipulation";
+      "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 touch-manipulation";
 
     const variantClasses = {
       primary:
-        "bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-500",
+        "bg-gradient-brand text-white hover:shadow-lg hover:scale-105 focus-visible:ring-brand-500 shadow-md",
       secondary:
-        "bg-gray-600 text-white hover:bg-gray-700 focus-visible:ring-gray-500",
+        "bg-gradient-to-r from-gray-600 to-gray-700 text-white hover:from-gray-700 hover:to-gray-800 hover:shadow-lg focus-visible:ring-gray-500 shadow-md",
       outline:
-        "border border-gray-300 bg-transparent hover:bg-gray-50 focus-visible:ring-gray-500",
-      ghost: "hover:bg-gray-100 focus-visible:ring-gray-500",
+        "border-2 border-brand-300 bg-white text-brand-700 hover:bg-brand-50 hover:border-brand-400 focus-visible:ring-brand-500",
+      ghost: "hover:bg-brand-50 text-brand-700 hover:text-brand-800 focus-visible:ring-brand-500",
     };
 
     const sizeClasses = {
-      sm: "h-10 sm:h-8 px-3 text-sm",
-      md: "h-12 sm:h-10 px-4 text-sm",
-      lg: "h-12 px-6 text-base",
+      sm: "h-10 sm:h-9 px-4 text-sm",
+      md: "h-12 sm:h-11 px-5 text-base",
+      lg: "h-14 px-8 text-lg",
     };
 
     const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;

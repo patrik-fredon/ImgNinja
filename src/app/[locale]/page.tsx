@@ -13,6 +13,8 @@ import { FileUpload } from "@/components/converter/FileUpload";
 import { LazyFormatSelector } from "@/components/converter/LazyFormatSelector";
 import { LazyQualityControl } from "@/components/converter/LazyQualityControl";
 import { LazyConversionQueue } from "@/components/converter/LazyConversionQueue";
+import { ImagePreview } from "@/components/converter/ImagePreview";
+import { SizeComparison } from "@/components/converter/SizeComparison";
 import type { ConversionItem } from "@/components/converter/ConversionQueue";
 import type { DownloadableFile } from "@/components/converter/DownloadButton";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -23,6 +25,7 @@ import { OutputFormat } from "@/types/formats";
 import { useErrorHandler, useErrors } from "@/lib/errors/context";
 import { validateFiles } from "@/lib/converter/validation";
 import { ImageConverterError } from "@/lib/errors/types";
+import { recommendFormat } from "@/lib/converter/recommendations";
 
 // Dynamic import for ImageConverter will be handled in useEffect
 
@@ -33,10 +36,13 @@ interface ConversionState {
   conversionItems: ConversionItem[];
   isConverting: boolean;
   estimatedSize?: number;
+  recommendation?: { format: OutputFormat; reason: string; savings: string };
+  originalPreview?: string;
+  convertedPreview?: string;
 }
 
 type ConversionAction =
-  | { type: "SET_FILES"; files: File[] }
+  | { type: "SET_FILES"; files: File[]; recommendation?: { format: OutputFormat; reason: string; savings: string }; preview?: string }
   | { type: "SET_FORMAT"; format: OutputFormat }
   | { type: "SET_QUALITY"; quality: number }
   | { type: "START_CONVERSION" }
@@ -48,7 +54,8 @@ type ConversionAction =
     }
   | { type: "REMOVE_CONVERSION_ITEM"; id: string }
   | { type: "CLEAR_COMPLETED" }
-  | { type: "SET_ESTIMATED_SIZE"; size: number };
+  | { type: "SET_ESTIMATED_SIZE"; size: number }
+  | { type: "SET_CONVERTED_PREVIEW"; preview: string };
 
 const initialState: ConversionState = {
   selectedFiles: [],
@@ -67,6 +74,9 @@ function conversionReducer(
       return {
         ...state,
         selectedFiles: action.files,
+        recommendation: action.recommendation,
+        originalPreview: action.preview,
+        convertedPreview: undefined,
         conversionItems: state.conversionItems.filter((item) =>
           action.files.some((file) => file.name === item.file.name)
         ),
@@ -133,6 +143,12 @@ function conversionReducer(
         estimatedSize: action.size,
       };
 
+    case "SET_CONVERTED_PREVIEW":
+      return {
+        ...state,
+        convertedPreview: action.preview,
+      };
+
     default:
       return state;
   }
@@ -189,23 +205,19 @@ export default function Home() {
   const { clearErrors } = useErrors();
 
   const handleFilesSelected = useCallback(
-    (files: File[]) => {
-      // Clear previous errors when new files are selected
+    async (files: File[]) => {
       clearErrors();
 
-      // Validate files before setting them
       const validationResults = validateFiles(files);
       const hasErrors = validationResults.some((result) => !result.valid);
 
       if (hasErrors) {
-        // Find the first error and display it
         const firstError = validationResults.find(
           (result) => !result.valid
         )?.error;
         if (firstError) {
           handleValidationError(firstError, {
             onSelectDifferentFile: () => {
-              // Clear files and errors
               dispatch({ type: "SET_FILES", files: [] });
               clearErrors();
             },
@@ -224,7 +236,20 @@ export default function Home() {
         return;
       }
 
-      dispatch({ type: "SET_FILES", files });
+      if (files.length > 0) {
+        const firstFile = files[0];
+        const recommendation = await recommendFormat(firstFile);
+        const preview = URL.createObjectURL(firstFile);
+
+        dispatch({
+          type: "SET_FILES",
+          files,
+          recommendation,
+          preview
+        });
+      } else {
+        dispatch({ type: "SET_FILES", files });
+      }
     },
     [handleValidationError, clearErrors, state.quality]
   );
@@ -278,6 +303,8 @@ export default function Home() {
           }
         );
 
+        const convertedPreview = URL.createObjectURL(result.blob);
+
         dispatch({
           type: "UPDATE_CONVERSION_ITEM",
           id: itemId,
@@ -288,6 +315,10 @@ export default function Home() {
             outputSize: result.size,
           },
         });
+
+        if (file === state.selectedFiles[0]) {
+          dispatch({ type: "SET_CONVERTED_PREVIEW", preview: convertedPreview });
+        }
       } catch (error) {
         let errorMessage = t("converter.errors.conversionFailed");
 
@@ -397,26 +428,26 @@ export default function Home() {
     hasFiles && !state.isConverting && converter && !isConverterLoading;
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
+    <main className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-accent-purple/5">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
         {/* Page Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
+        <div className="text-center mb-12 animate-fade-in">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-brand bg-clip-text text-transparent mb-4 px-2">
             {t("converter.title")}
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 px-2">
+          <p className="text-xl sm:text-2xl text-gray-600 mb-8 px-2">
             {t("converter.subtitle")}
           </p>
 
           {/* Privacy Notice */}
           <Card
             variant="outlined"
-            className="bg-blue-50 border-blue-200 mb-6 sm:mb-8 mx-2 sm:mx-0"
+            className="bg-gradient-to-r from-blue-50 to-brand-50 border-brand-200 mb-8 mx-auto max-w-2xl backdrop-blur-sm"
           >
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center justify-center space-x-2 text-blue-800">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-center space-x-3 text-brand-700">
                 <svg
-                  className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"
+                  className="w-5 h-5 shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -428,7 +459,7 @@ export default function Home() {
                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
                 </svg>
-                <p className="text-xs sm:text-sm font-medium text-center">
+                <p className="text-sm font-medium">
                   {t("privacy.notice")}
                 </p>
               </div>
@@ -439,11 +470,45 @@ export default function Home() {
           <ErrorList />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {/* Left Column - Upload and Settings */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+        {/* Main Content Grid with Ad Placements */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Left Ad Placement (Desktop) */}
+          <div className="hidden lg:block lg:col-span-2">
+            <div className="sticky top-24 space-y-6">
+              <div className="bg-gray-100 rounded-lg h-[600px] flex items-center justify-center text-gray-400 text-sm">
+                Ad Space
+              </div>
+            </div>
+          </div>
+
+          {/* Center Content */}
+          <div className="lg:col-span-7 space-y-6 animate-slide-up">
             {/* File Upload */}
             <FileUpload onFilesSelected={handleFilesSelected} maxFiles={10} />
+
+            {/* Format Recommendation */}
+            {hasFiles && state.recommendation && (
+              <Card variant="outlined" className="bg-gradient-to-r from-brand-50 to-accent-purple/10 border-brand-200">
+                <CardContent className="p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-brand flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-brand-900 mb-1">Recommended Format</p>
+                      <p className="text-sm text-gray-700 mb-2">
+                        Best choice: <span className="font-bold text-brand-700 uppercase">{state.recommendation.format}</span>
+                      </p>
+                      <p className="text-xs text-brand-600">
+                        Expected savings: {state.recommendation.savings}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Format Selection */}
             {hasFiles && (
@@ -463,18 +528,36 @@ export default function Home() {
               />
             )}
 
+            {/* Image Preview */}
+            {hasFiles && state.originalPreview && state.selectedFiles[0] && (
+              <ImagePreview
+                originalFile={state.selectedFiles[0]}
+                originalPreview={state.originalPreview}
+                convertedPreview={state.convertedPreview}
+                convertedBlob={completedItems[0]?.outputBlob}
+              />
+            )}
+
+            {/* Size Comparison */}
+            {completedItems.length > 0 && completedItems[0].outputSize && (
+              <SizeComparison
+                originalSize={completedItems[0].file.size}
+                convertedSize={completedItems[0].outputSize}
+              />
+            )}
+
             {/* Convert Button */}
             {hasFiles && (
-              <div className="flex justify-center px-4 sm:px-0">
+              <div className="flex justify-center">
                 {isConverterLoading ? (
-                  <LoadingSkeleton variant="button" className="w-32 h-12" />
+                  <LoadingSkeleton variant="button" className="w-full max-w-xs h-14" />
                 ) : (
                   <Button
                     variant="primary"
                     size="lg"
                     onClick={handleStartConversion}
                     disabled={!canStartConversion}
-                    className="px-6 sm:px-8 py-3 w-full sm:w-auto max-w-xs touch-manipulation min-h-[48px]"
+                    className="w-full max-w-xs h-14 text-lg font-semibold bg-gradient-brand hover:opacity-90 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
                   >
                     {state.isConverting
                       ? t("common.processing")
@@ -485,16 +568,25 @@ export default function Home() {
             )}
           </div>
 
-          {/* Right Column - Conversion Queue */}
-          <div className="space-y-4 sm:space-y-6">
+          {/* Right Column - Queue & Ads */}
+          <div className="lg:col-span-3 space-y-6">
             {state.conversionItems.length > 0 && (
-              <LazyConversionQueue
-                items={state.conversionItems}
-                onRemove={handleRemoveItem}
-                onDownload={handleDownloadItem}
-                onDownloadAll={handleDownloadAll}
-              />
+              <div className="animate-scale-in">
+                <LazyConversionQueue
+                  items={state.conversionItems}
+                  onRemove={handleRemoveItem}
+                  onDownload={handleDownloadItem}
+                  onDownloadAll={handleDownloadAll}
+                />
+              </div>
             )}
+
+            {/* Right Sidebar Ad */}
+            <div className="hidden lg:block sticky top-24">
+              <div className="bg-gray-100 rounded-lg h-[250px] flex items-center justify-center text-gray-400 text-sm">
+                Ad Space
+              </div>
+            </div>
           </div>
         </div>
       </div>

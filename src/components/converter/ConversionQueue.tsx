@@ -86,19 +86,21 @@ export function ConversionQueue({
         );
       case "complete":
         return (
-          <svg
-            className="w-5 h-5 text-green-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
+          <div className="w-6 h-6 rounded-full bg-gradient-success flex items-center justify-center animate-scale-in">
+            <svg
+              className="w-4 h-4 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
         );
       case "error":
         return (
@@ -166,15 +168,20 @@ export function ConversionQueue({
                         {item.file.name}
                       </p>
                       <div className="flex items-center space-x-2 text-xs text-gray-500">
-                        <span>{formatFileSize(item.file.size)}</span>
+                        <span className="font-medium">{formatFileSize(item.file.size)}</span>
                         <span>→</span>
-                        <span className="uppercase font-medium">
+                        <span className={`uppercase font-bold px-2 py-0.5 rounded-md ${
+                          item.outputFormat === 'webp' ? 'bg-format-webp/20 text-format-webp' :
+                          item.outputFormat === 'avif' ? 'bg-format-avif/20 text-format-avif' :
+                          item.outputFormat === 'png' ? 'bg-format-png/20 text-format-png' :
+                          item.outputFormat === 'jpeg' ? 'bg-format-jpeg/20 text-format-jpeg' :
+                          item.outputFormat === 'gif' ? 'bg-format-gif/20 text-format-gif' :
+                          'bg-gray-200 text-gray-700'
+                        }`}>
                           {item.outputFormat}
                         </span>
                         {item.outputSize && (
-                          <>
-                            <span>({formatFileSize(item.outputSize)})</span>
-                          </>
+                          <span className="font-medium">({formatFileSize(item.outputSize)})</span>
                         )}
                       </div>
                     </div>

@@ -20,31 +20,31 @@ function Progress({
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
   const sizeClasses = {
-    sm: "h-1",
-    md: "h-2",
-    lg: "h-3",
+    sm: "h-1.5",
+    md: "h-2.5",
+    lg: "h-4",
   };
 
   const variantClasses = {
-    default: "bg-blue-600",
-    success: "bg-green-600",
-    warning: "bg-yellow-600",
-    error: "bg-red-600",
+    default: "bg-gradient-brand",
+    success: "bg-gradient-success",
+    warning: "bg-gradient-to-r from-yellow-400 to-orange-500",
+    error: "bg-gradient-to-r from-red-500 to-pink-600",
   };
 
   return (
     <div className={`w-full ${className}`} {...props}>
       {showLabel && (
-        <div className="mb-1 flex justify-between text-sm text-gray-700">
+        <div className="mb-2 flex justify-between text-sm font-medium text-gray-700">
           <span>Progress</span>
-          <span>{Math.round(percentage)}%</span>
+          <span className="text-brand-600">{Math.round(percentage)}%</span>
         </div>
       )}
       <div
-        className={`w-full overflow-hidden rounded-full bg-gray-200 ${sizeClasses[size]}`}
+        className={`w-full overflow-hidden rounded-full bg-gray-200 shadow-inner ${sizeClasses[size]}`}
       >
         <div
-          className={`h-full transition-all duration-300 ease-in-out ${variantClasses[variant]}`}
+          className={`h-full transition-all duration-500 ease-out ${variantClasses[variant]} rounded-full shadow-sm`}
           style={{ width: `${percentage}%` }}
         />
       </div>
