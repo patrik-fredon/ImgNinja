@@ -1,5 +1,13 @@
 import type { OutputFormat } from '@/types/formats';
 import { FORMATS, getSupportedFormats as getFormats } from './formats';
+import {
+  ImageConverterError,
+  createConversionError,
+  createBrowserError,
+  handleGenericError,
+  type AppError
+} from '@/lib/errors/types';
+import { logError } from '@/lib/errors/handlers';
 
 export interface ConversionOptions {
   format: OutputFormat;
@@ -26,7 +34,17 @@ export class ImageConverter {
     this.workerSupported = typeof Worker !== 'undefined' && typeof OffscreenCanvas !== 'undefined';
   }
   private async loadImage(file: File): Promise<ImageBitmap> {
-    return await createImageBitmap(file);
+    try {
+      return await createImageBitmap(file);
+    } catch (error) {
+      const convertedError = handleGenericError(error, {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type
+      });
+      logError(convertedError.toAppError());
+      throw convertedError;
+    }
   }
 
   private calculateDimensions(

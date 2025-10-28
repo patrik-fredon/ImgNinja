@@ -1,6 +1,13 @@
 // File validation utilities for image converter
 // Validates file type and size before conversion
 
+import {
+  ImageConverterError,
+  createValidationError,
+  type AppError
+} from '@/lib/errors/types';
+import { getErrorMessage } from '@/lib/errors/handlers';
+
 export const ACCEPTED_MIME_TYPES = [
   'image/png',
   'image/jpeg',
@@ -14,20 +21,11 @@ export const ACCEPTED_MIME_TYPES = [
 ] as const;
 
 export const MAX_FILE_SIZE = 52428800; // 50MB in bytes
-
-export type ValidationErrorCode =
-  | 'INVALID_FILE_TYPE'
-  | 'FILE_TOO_LARGE'
-  | 'INVALID_FILE';
-
-export interface ValidationError {
-  code: ValidationErrorCode;
-  message: string;
-}
+export const MAX_FILES = 10;
 
 export interface ValidationResult {
   valid: boolean;
-  error?: ValidationError;
+  error?: AppError;
 }
 
 /**
@@ -35,12 +33,16 @@ export interface ValidationResult {
  */
 export function validateFileType(file: File): ValidationResult {
   if (!ACCEPTED_MIME_TYPES.includes(file.type as any)) {
+    const error = createValidationError(
+      'INVALID_FILE_TYPE',
+      getErrorMessage('INVALID_FILE_TYPE', { fileType: file.type }),
+      `Accepted formats: ${ACCEPTED_MIME_TYPES.join(', ')}`,
+      { fileType: file.type, fileName: file.name }
+    );
+
     return {
       valid: false,
-      error: {
-        code: 'INVALID_FILE_TYPE',
-        message: `Unsupported file type: ${file.type}. Accepted formats: PNG, JPEG, GIF, BMP, TIFF, SVG, WebP, AVIF`,
-      },
+      error: error.toAppError(),
     };
   }
 
@@ -52,14 +54,20 @@ export function validateFileType(file: File): ValidationResult {
  */
 export function validateFileSize(file: File): ValidationResult {
   if (file.size > MAX_FILE_SIZE) {
-    const sizeMB = (file.size / 1048576).toFixed(2);
-    const maxSizeMB = (MAX_FILE_SIZE / 1048576).toFixed(0);
+    const error = createValidationError(
+      'FILE_TOO_LARGE',
+      getErrorMessage('FILE_TOO_LARGE', { fileSize: file.size }),
+      `Maximum allowed size: ${(MAX_FILE_SIZE / 1048576).toFixed(0)}MB`,
+      {
+        fileSize: file.size,
+        fileName: file.name,
+        maxSize: MAX_FILE_SIZE
+      }
+    );
+
     return {
       valid: false,
-      error: {
-        code: 'FILE_TOO_LARGE',
-        message: `File size (${sizeMB}MB) exceeds maximum limit of ${maxSizeMB}MB`,
-      },
+      error: error.toAppError(),
     };
   }
 
@@ -72,12 +80,16 @@ export function validateFileSize(file: File): ValidationResult {
  */
 export function validateFile(file: File): ValidationResult {
   if (!file || !(file instanceof File)) {
+    const error = createValidationError(
+      'INVALID_FILE',
+      getErrorMessage('INVALID_FILE'),
+      'File object is null, undefined, or not a valid File instance',
+      { file: typeof file }
+    );
+
     return {
       valid: false,
-      error: {
-        code: 'INVALID_FILE',
-        message: 'Invalid file object',
-      },
+      error: error.toAppError(),
     };
   }
 
@@ -99,6 +111,22 @@ export function validateFile(file: File): ValidationResult {
  * Returns array of validation results in same order as input
  */
 export function validateFiles(files: File[]): ValidationResult[] {
+  // Check file count limit first
+  if (files.length > MAX_FILES) {
+    const error = createValidationError(
+      'TOO_MANY_FILES',
+      getErrorMessage('TOO_MANY_FILES', { count: files.length }),
+      `Maximum allowed files: ${MAX_FILES}`,
+      { fileCount: files.length, maxFiles: MAX_FILES }
+    );
+
+    // Return error for all files if count exceeds limit
+    return files.map(() => ({
+      valid: false,
+      error: error.toAppError(),
+    }));
+  }
+
   return files.map(validateFile);
 }
 
@@ -107,4 +135,13 @@ export function validateFiles(files: File[]): ValidationResult[] {
  */
 export function areAllFilesValid(files: File[]): boolean {
   return validateFiles(files).every((result) => result.valid);
+}
+
+/**
+ * Gets the first validation error from a list of files
+ */
+export function getFirstValidationError(files: File[]): AppError | null {
+  const results = validateFiles(files);
+  const firstError = results.find(result => !result.valid);
+  return firstError?.error || null;
 }

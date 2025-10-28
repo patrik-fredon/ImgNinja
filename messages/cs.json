@@ -40,12 +40,16 @@
     "queue": {
       "title": "Fronta konverze",
       "empty": "Žádné soubory k převodu",
+      "downloadAll": "Stáhnout vše",
       "status": {
         "pending": "Čeká",
         "processing": "Zpracovává se",
         "complete": "Dokončeno",
         "error": "Chyba"
       }
+    },
+    "download": {
+      "downloadAll": "Stáhnout vše jako ZIP"
     },
     "errors": {
       "invalidType": "Nepodporovaný typ souboru",
@@ -81,6 +85,31 @@
       "name": "GIF",
       "description": "Formát s podporou animací",
       "useCase": "Nejlepší pro jednoduché animace"
+    },
+    "page": {
+      "title": "Informace o formátu",
+      "details": "Detaily formátu",
+      "useCase": "Použití",
+      "bestFor": "Nejlepší pro:",
+      "browserCompatibility": "Kompatibilita prohlížečů",
+      "browser": "Prohlížeč",
+      "support": "Podpora",
+      "status": "Stav",
+      "supported": "Podporováno",
+      "conversionExamples": "Příklady konverze",
+      "convertTo": "Kdy převést NA {format}",
+      "convertFrom": "Kdy převést Z {format}",
+      "technicalSpecs": "Technické specifikace",
+      "compression": "Komprese",
+      "fileSize": "Velikost souboru",
+      "mimeType": "MIME typ",
+      "fileExtension": "Přípona souboru",
+      "qualityControl": "Kontrola kvality",
+      "transparency": "Průhlednost",
+      "recommended": "Doporučeno",
+      "yes": "Ano",
+      "no": "Ne",
+      "notSupported": "Nepodporováno"
     }
   },
   "layout": {
@@ -96,8 +125,104 @@
       "formats": "Informace o formátech"
     }
   },
+  "metadata": {
+    "siteName": "ImgNinja",
+    "title": "ImgNinja - Bezplatný online konvertor obrázků",
+    "description": "Převádějte obrázky do formátů WebP, AVIF, PNG, JPEG okamžitě. Rychlý, bezplatný a zcela soukromý - veškeré zpracování probíhá ve vašem prohlížeči. Žádné nahrávání, není nutná registrace.",
+    "keywords": "konvertor obrázků, webp konvertor, avif konvertor, png konvertor, jpeg konvertor, online nástroj pro obrázky, bezplatný konvertor obrázků, zpracování obrázků v prohlížeči, konverze obrázků na straně klienta, soukromý konvertor obrázků, konvertor bez nahrávání, optimalizace webových obrázků, konvertor formátů obrázků, ImgNinja"
+  },
   "privacy": {
     "title": "Zásady ochrany osobních údajů",
-    "notice": "Vaše obrázky nikdy neopustí vaše zařízení. Veškeré zpracování probíhá lokálně ve vašem prohlížeči. Neukládáme ani nepřenášíme vaše soubory."
+    "subtitle": "Vaše soukromí je naší prioritou. Zjistěte, jak chráníme vaše data a obrázky.",
+    "metaDescription": "Komplexní zásady ochrany osobních údajů vysvětlující, jak Konvertor obrázků chrání vaše data pomocí zpracování na straně klienta bez nahrávání na server.",
+    "notice": "Vaše obrázky nikdy neopustí vaše zařízení. Veškeré zpracování probíhá lokálně ve vašem prohlížeči. Neukládáme ani nepřenášíme vaše soubory.",
+    "clientSide": {
+      "title": "Zpracování na straně klienta",
+      "guarantee": "100% zpracování na straně klienta - Vaše obrázky nikdy neopustí vaše zařízení",
+      "description": "Náš konvertor obrázků funguje výhradně ve vašem webovém prohlížeči pomocí moderních webových technologií. To znamená, že vaše obrázky jsou zpracovávány lokálně na vašem zařízení a nikdy nejsou nahrávány na naše servery nebo jakékoli služby třetích stran.",
+      "point1": "Veškerá konverze obrázků probíhá ve vašem prohlížeči pomocí Canvas API a Web Workers",
+      "point2": "Žádné obrázky nejsou nikdy nahrávány na servery nebo přenášeny přes internet",
+      "point3": "Zpracování funguje i když jste offline",
+      "point4": "Vaše obrázky zůstávají zcela soukromé a pod vaší kontrolou"
+    },
+    "dataHandling": {
+      "title": "Nakládání s daty a ukládání",
+      "description": "Zavazujeme se k transparentnosti ohledně toho, jak jsou vaše data zpracovávána během procesu konverze.",
+      "browserStorage": {
+        "title": "Použití úložiště prohlížeče",
+        "description": "Naše aplikace používá mechanismy lokálního úložiště vašeho prohlížeče dočasně během procesu konverze:",
+        "point1": "Dočasné ukládání obrazových dat v paměti prohlížeče během zpracování",
+        "point2": "Použití Web Workers pro zpracování na pozadí bez blokování vašeho prohlížeče",
+        "point3": "Dočasné vytváření object URL pro funkci stahování",
+        "point4": "Všechna dočasná data jsou automaticky vymazána při zavření záložky prohlížeče"
+      },
+      "dataClearing": {
+        "title": "Vymazání vašich dat",
+        "description": "Máte úplnou kontrolu nad vymazáním jakýchkoli dočasných dat uložených naší aplikací:",
+        "howTo": {
+          "title": "Jak vymazat všechna lokální data:",
+          "step1": "Zavřete všechny záložky prohlížeče s naší aplikací",
+          "step2": "Vymažte cache a lokální úložiště vašeho prohlížeče",
+          "step3": "Použijte vývojářské nástroje prohlížeče k prohlédnutí a vymazání úložiště",
+          "step4": "Restartujte prohlížeč pro úplné vyčištění"
+        }
+      }
+    },
+    "thirdParty": {
+      "title": "Integrace třetích stran",
+      "description": "Ačkoli nesdílíme vaše obrázky s žádnými třetími stranami, naše webová stránka integruje některé externí služby pro funkčnost a monetizaci:",
+      "googleAds": {
+        "title": "Google Ads",
+        "description": "Zobrazujeme reklamy prostřednictvím Google Ads pro podporu naší bezplatné služby:",
+        "point1": "Google Ads může sbírat anonymní data o používání pro cílení reklam",
+        "point2": "Žádná obrazová data nebo historie konverzí nejsou sdíleny s Googlem",
+        "point3": "Můžete použít blokátory reklam k zabránění sběru dat souvisejících s reklamami"
+      },
+      "analytics": {
+        "title": "Analytika (pokud je použita)",
+        "description": "Můžeme používat analytické služby k pochopení toho, jak je naše aplikace používána:",
+        "point1": "Sbírají se pouze anonymní statistiky používání",
+        "point2": "Žádné osobní informace nebo obrazová data nejsou zahrnuta v analytice",
+        "point3": "Analytika nám pomáhá zlepšovat výkon a funkce aplikace"
+      }
+    },
+    "technical": {
+      "title": "Technická implementace",
+      "description": "Náš přístup zaměřený na soukromí je zabudován do technické architektury naší aplikace:",
+      "webWorkers": {
+        "title": "Web Workers",
+        "description": "Používáme Web Workers k zpracování obrázků v pozadí, což zajišťuje, že váš prohlížeč zůstane responzivní při zachování úplného soukromí."
+      },
+      "canvasApi": {
+        "title": "Canvas API",
+        "description": "Konverze obrázků se provádí pomocí HTML5 Canvas API, které funguje výhradně ve vašem prohlížeči bez jakékoli externí komunikace."
+      },
+      "fileApi": {
+        "title": "File API",
+        "description": "Používáme File API prohlížeče k čtení vašich vybraných obrázků přímo z vašeho zařízení bez jejich nahrávání kamkoli."
+      }
+    },
+    "userRights": {
+      "title": "Vaše práva a kontrola",
+      "description": "Protože veškeré zpracování probíhá lokálně, zachováváte si úplnou kontrolu nad svými daty:",
+      "point1": "Právo na úplné soukromí - vaše obrázky nikdy neopustí vaše zařízení",
+      "point2": "Právo na přenositelnost dat - stáhněte si své převedené obrázky kdykoli",
+      "point3": "Právo na vymazání - jednoduše zavřete prohlížeč pro vymazání všech dočasných dat",
+      "point4": "Právo na transparentnost - náš otevřený přístup k soukromí a nakládání s daty"
+    },
+    "security": {
+      "title": "Bezpečnostní opatření",
+      "description": "Implementujeme několik bezpečnostních opatření k ochraně vašeho soukromí:",
+      "point1": "Content Security Policy (CSP) hlavičky k zabránění škodlivým skriptům",
+      "point2": "HTTPS šifrování pro veškerou komunikaci webové stránky",
+      "point3": "Žádné ukládání nebo logování uživatelských dat na straně serveru",
+      "point4": "Pravidelné bezpečnostní aktualizace naší webové aplikace"
+    },
+    "contact": {
+      "title": "Kontaktní informace",
+      "description": "Pokud máte jakékoli otázky ohledně těchto zásad ochrany osobních údajů nebo našich postupů s daty, kontaktujte nás:",
+      "info": "Pro dotazy týkající se soukromí použijte prosím kontaktní informace uvedené na našich webových stránkách."
+    },
+    "lastUpdated": "Naposledy aktualizováno: říjen 2024"
   }
 }

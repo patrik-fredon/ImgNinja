@@ -1,0 +1,233 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Progress } from "@/components/ui/Progress";
+import { formatFileSize } from "@/lib/utils/file-size";
+import { OutputFormat } from "@/types/formats";
+
+export interface ConversionItem {
+  id: string;
+  file: File;
+  outputFormat: OutputFormat;
+  quality: number;
+  status: "pending" | "processing" | "complete" | "error";
+  progress: number;
+  outputBlob?: Blob;
+  outputSize?: number;
+  error?: string;
+}
+
+interface ConversionQueueProps {
+  items: ConversionItem[];
+  onRemove: (id: string) => void;
+  onDownload: (id: string) => void;
+  onDownloadAll: () => void;
+  className?: string;
+}
+
+export function ConversionQueue({
+  items,
+  onRemove,
+  onDownload,
+  onDownloadAll,
+  className = "",
+}: ConversionQueueProps) {
+  const t = useTranslations();
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  const completedItems = items.filter((item) => item.status === "complete");
+  const hasCompletedItems = completedItems.length > 0;
+  const hasMultipleCompleted = completedItems.length > 1;
+
+  const getStatusIcon = (status: ConversionItem["status"]) => {
+    switch (status) {
+      case "pending":
+        return (
+          <svg
+            className="w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        );
+      case "processing":
+        return (
+          <svg
+            className="w-5 h-5 text-blue-500 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+        );
+      case "complete":
+        return (
+          <svg
+            className="w-5 h-5 text-green-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        );
+      case "error":
+        return (
+          <svg
+            className="w-5 h-5 text-red-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        );
+    }
+  };
+
+  const getProgressVariant = (status: ConversionItem["status"]) => {
+    switch (status) {
+      case "complete":
+        return "success";
+      case "error":
+        return "error";
+      case "processing":
+        return "default";
+      default:
+        return "default";
+    }
+  };
+
+  return (
+    <div className={className}>
+      <Card variant="outlined">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>
+              {t("converter.queue.title")} ({items.length})
+            </CardTitle>
+            {hasMultipleCompleted && (
+              <Button variant="primary" size="sm" onClick={onDownloadAll}>
+                {t("converter.queue.downloadAll")}
+              </Button>
+            )}
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          {items.map((item) => (
+            <Card key={item.id} variant="outlined" className="p-4">
+              <div className="space-y-3">
+                {/* File info header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {getStatusIcon(item.status)}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {item.file.name}
+                      </p>
+                      <div className="flex items-center space-x-2 text-xs text-gray-500">
+                        <span>{formatFileSize(item.file.size)}</span>
+                        <span>→</span>
+                        <span className="uppercase font-medium">
+                          {item.outputFormat}
+                        </span>
+                        {item.outputSize && (
+                          <>
+                            <span>({formatFileSize(item.outputSize)})</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    {item.status === "complete" && (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => onDownload(item.id)}
+                      >
+                        {t("common.download")}
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onRemove(item.id)}
+                    >
+                      {t("common.remove")}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                {(item.status === "processing" ||
+                  item.status === "complete") && (
+                  <Progress
+                    value={item.progress}
+                    variant={getProgressVariant(item.status)}
+                    size="sm"
+                    showLabel={item.status === "processing"}
+                  />
+                )}
+
+                {/* Error message */}
+                {item.status === "error" && item.error && (
+                  <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
+                    {item.error}
+                  </div>
+                )}
+
+                {/* Status text */}
+                <div className="text-xs text-gray-500">
+                  {item.status === "pending" &&
+                    t("converter.queue.status.pending")}
+                  {item.status === "processing" &&
+                    t("converter.queue.status.processing")}
+                  {item.status === "complete" &&
+                    t("converter.queue.status.complete")}
+                  {item.status === "error" && t("converter.queue.status.error")}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

@@ -40,12 +40,16 @@
     "queue": {
       "title": "Conversion Queue",
       "empty": "No files to convert",
+      "downloadAll": "Download All",
       "status": {
         "pending": "Pending",
         "processing": "Processing",
         "complete": "Complete",
         "error": "Error"
       }
+    },
+    "download": {
+      "downloadAll": "Download All as ZIP"
     },
     "errors": {
       "invalidType": "Unsupported file type",
@@ -81,6 +85,31 @@
       "name": "GIF",
       "description": "Format with animation support",
       "useCase": "Best for simple animations"
+    },
+    "page": {
+      "title": "Format Information",
+      "details": "Format Details",
+      "useCase": "Use Case",
+      "bestFor": "Best For:",
+      "browserCompatibility": "Browser Compatibility",
+      "browser": "Browser",
+      "support": "Support",
+      "status": "Status",
+      "supported": "Supported",
+      "conversionExamples": "Conversion Examples",
+      "convertTo": "When to Convert TO {format}",
+      "convertFrom": "When to Convert FROM {format}",
+      "technicalSpecs": "Technical Specifications",
+      "compression": "Compression",
+      "fileSize": "File Size",
+      "mimeType": "MIME Type",
+      "fileExtension": "File Extension",
+      "qualityControl": "Quality Control",
+      "transparency": "Transparency",
+      "recommended": "Recommended",
+      "yes": "Yes",
+      "no": "No",
+      "notSupported": "Not supported"
     }
   },
   "layout": {
@@ -96,8 +125,104 @@
       "formats": "Format Information"
     }
   },
+  "metadata": {
+    "siteName": "ImgNinja",
+    "title": "ImgNinja - Free Online Image Converter",
+    "description": "Convert images to WebP, AVIF, PNG, JPEG formats instantly. Fast, free, and completely private - all processing happens in your browser. No uploads, no registration required.",
+    "keywords": "image converter, webp converter, avif converter, png converter, jpeg converter, online image tool, free image converter, browser image processing, client-side image conversion, private image converter, no upload image converter, web image optimization, image format converter, ImgNinja"
+  },
   "privacy": {
     "title": "Privacy Policy",
-    "notice": "Your images never leave your device. All processing happens locally in your browser. We don't store or transmit your files."
+    "subtitle": "Your privacy is our priority. Learn how we protect your data and images.",
+    "metaDescription": "Comprehensive privacy policy explaining how Image Converter protects your data with client-side processing and no server uploads.",
+    "notice": "Your images never leave your device. All processing happens locally in your browser. We don't store or transmit your files.",
+    "clientSide": {
+      "title": "Client-Side Processing",
+      "guarantee": "100% Client-Side Processing - Your images never leave your device",
+      "description": "Our image converter operates entirely within your web browser using modern web technologies. This means your images are processed locally on your device and never uploaded to our servers or any third-party services.",
+      "point1": "All image conversion happens in your browser using Canvas API and Web Workers",
+      "point2": "No images are ever uploaded to servers or transmitted over the internet",
+      "point3": "Processing continues to work even when you're offline",
+      "point4": "Your images remain completely private and under your control"
+    },
+    "dataHandling": {
+      "title": "Data Handling and Storage",
+      "description": "We are committed to transparency about how your data is handled during the conversion process.",
+      "browserStorage": {
+        "title": "Browser Storage Usage",
+        "description": "Our application uses your browser's local storage mechanisms temporarily during the conversion process:",
+        "point1": "Temporary storage of image data in browser memory during processing",
+        "point2": "Use of Web Workers for background processing without blocking your browser",
+        "point3": "Temporary creation of object URLs for download functionality",
+        "point4": "All temporary data is automatically cleared when you close the browser tab"
+      },
+      "dataClearing": {
+        "title": "Clearing Your Data",
+        "description": "You have complete control over clearing any temporary data stored by our application:",
+        "howTo": {
+          "title": "How to clear all local data:",
+          "step1": "Close all browser tabs with our application",
+          "step2": "Clear your browser's cache and local storage",
+          "step3": "Use your browser's developer tools to inspect and clear storage",
+          "step4": "Restart your browser for complete cleanup"
+        }
+      }
+    },
+    "thirdParty": {
+      "title": "Third-Party Integrations",
+      "description": "While we don't share your images with any third parties, our website does integrate with some external services for functionality and monetization:",
+      "googleAds": {
+        "title": "Google Ads",
+        "description": "We display advertisements through Google Ads to support our free service:",
+        "point1": "Google Ads may collect anonymous usage data for ad targeting",
+        "point2": "No image data or conversion history is shared with Google",
+        "point3": "You can use ad blockers to prevent ad-related data collection"
+      },
+      "analytics": {
+        "title": "Analytics (if applicable)",
+        "description": "We may use analytics services to understand how our application is used:",
+        "point1": "Only anonymous usage statistics are collected",
+        "point2": "No personal information or image data is included in analytics",
+        "point3": "Analytics help us improve the application's performance and features"
+      }
+    },
+    "technical": {
+      "title": "Technical Implementation",
+      "description": "Our privacy-first approach is built into the technical architecture of our application:",
+      "webWorkers": {
+        "title": "Web Workers",
+        "description": "We use Web Workers to process images in background threads, ensuring your browser remains responsive while maintaining complete privacy."
+      },
+      "canvasApi": {
+        "title": "Canvas API",
+        "description": "Image conversion is performed using the HTML5 Canvas API, which operates entirely within your browser without any external communication."
+      },
+      "fileApi": {
+        "title": "File API",
+        "description": "We use the browser's File API to read your selected images directly from your device without uploading them anywhere."
+      }
+    },
+    "userRights": {
+      "title": "Your Rights and Control",
+      "description": "Because all processing happens locally, you maintain complete control over your data:",
+      "point1": "Right to complete privacy - your images never leave your device",
+      "point2": "Right to data portability - download your converted images anytime",
+      "point3": "Right to deletion - simply close your browser to clear all temporary data",
+      "point4": "Right to transparency - our open approach to privacy and data handling"
+    },
+    "security": {
+      "title": "Security Measures",
+      "description": "We implement several security measures to protect your privacy:",
+      "point1": "Content Security Policy (CSP) headers to prevent malicious scripts",
+      "point2": "HTTPS encryption for all website communications",
+      "point3": "No server-side storage or logging of user data",
+      "point4": "Regular security updates to our web application"
+    },
+    "contact": {
+      "title": "Contact Information",
+      "description": "If you have any questions about this privacy policy or our data practices, please contact us:",
+      "info": "For privacy-related inquiries, please use the contact information provided on our website."
+    },
+    "lastUpdated": "Last updated: October 2024"
   }
 }
