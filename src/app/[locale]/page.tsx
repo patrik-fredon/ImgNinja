@@ -1,6 +1,13 @@
 "use client";
 
-import { useReducer, useCallback, useEffect, useState, lazy, Suspense } from "react";
+import {
+  useReducer,
+  useCallback,
+  useEffect,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import { useTranslations } from "next-intl";
 import { HeroSection } from "@/components/layout/HeroSection";
 import { FeatureIntroduction } from "@/components/layout/FeatureIntroduction";
@@ -14,6 +21,10 @@ import { MobileConversionQueue } from "@/components/converter/MobileConversionQu
 import { useMobileDetection } from "@/hooks/useMobileDetection";
 import { SwipeableImagePreview } from "@/components/converter/SwipeableImagePreview";
 import { SizeComparison } from "@/components/converter/SizeComparison";
+import {
+  EmailCapture,
+  useConversionTracking,
+} from "@/components/converter/EmailCapture";
 import type { ConversionItem } from "@/components/converter/ConversionQueue";
 import type { DownloadableFile } from "@/components/converter/DownloadButton";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -74,7 +85,10 @@ const initialState: ConversionState = {
   isConverting: false,
 };
 
-function conversionReducer(state: ConversionState, action: ConversionAction): ConversionState {
+function conversionReducer(
+  state: ConversionState,
+  action: ConversionAction
+): ConversionState {
   switch (action.type) {
     case "SET_FILES":
       return {
@@ -130,13 +144,17 @@ function conversionReducer(state: ConversionState, action: ConversionAction): Co
     case "REMOVE_CONVERSION_ITEM":
       return {
         ...state,
-        conversionItems: state.conversionItems.filter((item) => item.id !== action.id),
+        conversionItems: state.conversionItems.filter(
+          (item) => item.id !== action.id
+        ),
       };
 
     case "CLEAR_COMPLETED":
       return {
         ...state,
-        conversionItems: state.conversionItems.filter((item) => item.status !== "complete"),
+        conversionItems: state.conversionItems.filter(
+          (item) => item.status !== "complete"
+        ),
       };
 
     case "SET_ESTIMATED_SIZE":
@@ -165,8 +183,10 @@ export default function Home() {
   const [showIntroduction, setShowIntroduction] = useState(false);
   const [showTour, setShowTour] = useState(false);
   const { isMobile } = useMobileDetection();
+  const { incrementConversionCount, incrementVisitCount } =
+    useConversionTracking();
 
-  // Initialize converter lazily
+  // Initialize converter lazily and track visits
   useEffect(() => {
     const initConverter = async () => {
       try {
@@ -180,7 +200,8 @@ export default function Home() {
     };
 
     initConverter();
-  }, []);
+    incrementVisitCount();
+  }, [incrementVisitCount]);
 
   // Estimate size when format or quality changes
   useEffect(() => {
@@ -218,7 +239,9 @@ export default function Home() {
       const hasErrors = validationResults.some((result) => !result.valid);
 
       if (hasErrors) {
-        const firstError = validationResults.find((result) => !result.valid)?.error;
+        const firstError = validationResults.find(
+          (result) => !result.valid
+        )?.error;
         if (firstError) {
           handleValidationError(firstError, {
             onSelectDifferentFile: () => {
@@ -326,6 +349,18 @@ export default function Home() {
             preview: convertedPreview,
           });
         }
+
+        // Add to conversion history and track conversion
+        if ((window as any).addToConversionHistory) {
+          (window as any).addToConversionHistory({
+            fileName: file.name,
+            originalFormat: file.type,
+            targetFormat: state.outputFormat,
+            originalSize: file.size,
+            convertedSize: result.size,
+          });
+        }
+        incrementConversionCount();
       } catch (error) {
         let errorMessage = t("converter.errors.conversionFailed");
 
@@ -386,12 +421,14 @@ export default function Home() {
 
     if (completedItems.length === 0) return;
 
-    const downloadableFiles: DownloadableFile[] = completedItems.map((item) => ({
-      id: item.id,
-      originalName: item.file.name,
-      outputFormat: item.outputFormat,
-      blob: item.outputBlob!,
-    }));
+    const downloadableFiles: DownloadableFile[] = completedItems.map(
+      (item) => ({
+        id: item.id,
+        originalName: item.file.name,
+        outputFormat: item.outputFormat,
+        blob: item.outputBlob!,
+      })
+    );
 
     try {
       // Dynamically import JSZip and formats
@@ -404,7 +441,9 @@ export default function Home() {
 
       downloadableFiles.forEach((file) => {
         const nameWithoutExt = file.originalName.replace(/\.[^/.]+$/, "");
-        const fileName = `${nameWithoutExt}${FORMATS[file.outputFormat].extension}`;
+        const fileName = `${nameWithoutExt}${
+          FORMATS[file.outputFormat].extension
+        }`;
         zip.file(fileName, file.blob);
       });
 
@@ -423,15 +462,20 @@ export default function Home() {
     }
   }, [state.conversionItems]);
 
-  const completedItems = state.conversionItems.filter((item) => item.status === "complete");
+  const completedItems = state.conversionItems.filter(
+    (item) => item.status === "complete"
+  );
   const hasFiles = state.selectedFiles.length > 0;
-  const canStartConversion = hasFiles && !state.isConverting && converter && !isConverterLoading;
+  const canStartConversion =
+    hasFiles && !state.isConverting && converter && !isConverterLoading;
 
   const handleGetStarted = () => {
     setShowConverter(true);
 
     // Check if user is new (no localStorage flag)
-    const hasSeenIntroduction = localStorage.getItem("imgninja-seen-introduction");
+    const hasSeenIntroduction = localStorage.getItem(
+      "imgninja-seen-introduction"
+    );
     if (!hasSeenIntroduction) {
       setShowIntroduction(true);
     }
@@ -468,17 +512,24 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-linear-to-br from-brand-50 via-white to-accent-purple/5">
       {/* Hero Section */}
-      {!showConverter && <HeroSection onGetStarted={handleGetStarted} ctaVariant="gradient" />}
+      {!showConverter && (
+        <HeroSection onGetStarted={handleGetStarted} ctaVariant="gradient" />
+      )}
 
       {/* Converter Section */}
       {showConverter && (
-        <div id="converter-section" className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+        <div
+          id="converter-section"
+          className="max-w-7xl mx-auto px-4 py-8 sm:py-12"
+        >
           {/* Page Header */}
           <div className="text-center mb-12 animate-fade-in">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-brand bg-clip-text text-transparent mb-4 px-2">
               {t("converter.title")}
             </h1>
-            <p className="text-xl sm:text-2xl text-gray-600 mb-8 px-2">{t("converter.subtitle")}</p>
+            <p className="text-xl sm:text-2xl text-gray-600 mb-8 px-2">
+              {t("converter.subtitle")}
+            </p>
 
             {/* Privacy Notice */}
             <Card
@@ -524,7 +575,10 @@ export default function Home() {
             <div className="lg:col-span-7 space-y-6 animate-slide-up">
               {/* File Upload */}
               <div data-tour="file-upload">
-                <FileUpload onFilesSelected={handleFilesSelected} maxFiles={10} />
+                <FileUpload
+                  onFilesSelected={handleFilesSelected}
+                  maxFiles={10}
+                />
               </div>
 
               {/* Format Recommendation */}
@@ -551,7 +605,9 @@ export default function Home() {
                         </svg>
                       </div>
                       <div className="flex-1">
-                        <p className="font-semibold text-brand-900 mb-1">Recommended Format</p>
+                        <p className="font-semibold text-brand-900 mb-1">
+                          Recommended Format
+                        </p>
                         <p className="text-sm text-gray-700 mb-2">
                           Best choice:{" "}
                           <span className="font-bold text-brand-700 uppercase">
@@ -618,7 +674,10 @@ export default function Home() {
               {hasFiles && (
                 <div className="flex justify-center">
                   {isConverterLoading ? (
-                    <LoadingSkeleton variant="button" className="w-full max-w-xs h-14" />
+                    <LoadingSkeleton
+                      variant="button"
+                      className="w-full max-w-xs h-14"
+                    />
                   ) : (
                     <div data-tour="convert-button">
                       <TouchOptimizedButton
@@ -629,7 +688,9 @@ export default function Home() {
                         className="w-full max-w-xs text-lg font-semibold bg-gradient-brand shadow-lg"
                         hapticFeedback={true}
                       >
-                        {state.isConverting ? t("common.processing") : t("converter.title")}
+                        {state.isConverting
+                          ? t("common.processing")
+                          : t("converter.title")}
                       </TouchOptimizedButton>
                     </div>
                   )}
@@ -667,17 +728,36 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* Email Capture - Show after conversions */}
+          <div className="mt-12">
+            <EmailCapture
+              trigger="conversion"
+              showAfterConversions={3}
+              onEmailCaptured={(email, preferences) => {
+                console.log("Email captured:", email, preferences);
+                // Here you would typically send to your email service
+              }}
+            />
+          </div>
         </div>
       )}
 
       {/* Feature Introduction Modal */}
       {showIntroduction && (
-        <FeatureIntroduction onStartTour={handleStartTour} onDismiss={handleSkipIntroduction} />
+        <FeatureIntroduction
+          onStartTour={handleStartTour}
+          onDismiss={handleSkipIntroduction}
+        />
       )}
 
       {/* Guided Tour */}
       {showTour && (
-        <GuidedTour isActive={showTour} onComplete={handleCompleteTour} onSkip={handleSkipTour} />
+        <GuidedTour
+          isActive={showTour}
+          onComplete={handleCompleteTour}
+          onSkip={handleSkipTour}
+        />
       )}
     </main>
   );

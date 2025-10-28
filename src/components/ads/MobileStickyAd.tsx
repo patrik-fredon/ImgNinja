@@ -4,7 +4,13 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useMobileDetection } from "@/hooks/useMobileDetection";
 import { OptimizedAdPlacement } from "./OptimizedAdPlacement";
 // Simple X icon component
-const XIcon = ({ size = 16, className = "" }: { size?: number; className?: string }) => (
+const XIcon = ({
+  size = 16,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) => (
   <svg
     width={size}
     height={size}
@@ -45,8 +51,8 @@ export function MobileStickyAd({
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout>();
-  const autoHideTimeoutRef = useRef<NodeJS.Timeout>();
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoHideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Only show on mobile devices
   useEffect(() => {

@@ -7,7 +7,7 @@
  */
 export function yieldToMain(): Promise<void> {
   return new Promise((resolve) => {
-    if ("scheduler" in window && "postTask" in window.scheduler) {
+    if ("scheduler" in window && "postTask" in (window.scheduler as any)) {
       // Use scheduler.postTask if available (Chrome 94+)
       (window.scheduler as any).postTask(resolve, { priority: "user-blocking" });
     } else {

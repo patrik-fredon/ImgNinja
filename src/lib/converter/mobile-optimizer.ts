@@ -304,10 +304,10 @@ export class MobileOptimizedConverter {
     // Get memory info if available
     const memoryInfo = (performance as any).memory
       ? {
-          totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
-          usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
-          jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit,
-        }
+        totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
+        usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
+        jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit,
+      }
       : undefined;
 
     return {
@@ -319,6 +319,9 @@ export class MobileOptimizedConverter {
   }
 
   private static detectLowEndDevice(): boolean {
+    // Check if navigator is available (client-side only)
+    if (typeof navigator === "undefined") return false;
+
     // Check for device memory API
     if ("deviceMemory" in navigator) {
       return (navigator as any).deviceMemory <= 2; // 2GB or less
@@ -330,7 +333,7 @@ export class MobileOptimizedConverter {
     }
 
     // Fallback: check user agent for known low-end devices
-    const userAgent = navigator.userAgent.toLowerCase();
+    const userAgent = (navigator as Navigator).userAgent.toLowerCase();
     const lowEndPatterns = [
       "android 4",
       "android 5",

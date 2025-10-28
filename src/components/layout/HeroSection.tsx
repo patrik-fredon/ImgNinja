@@ -13,7 +13,10 @@ interface HeroSectionProps {
   ctaVariant?: "gradient" | "glassmorphic" | "animated";
 }
 
-export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSectionProps) {
+export function HeroSection({
+  onGetStarted,
+  ctaVariant = "gradient",
+}: HeroSectionProps) {
   const t = useTranslations();
   const [currentStat, setCurrentStat] = useState(0);
 
@@ -34,7 +37,8 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
   }, [stats.length]);
 
   const renderCTA = () => {
-    const baseClasses = "px-8 py-4 text-lg font-semibold transition-all duration-300";
+    const baseClasses =
+      "px-8 py-4 text-lg font-semibold transition-all duration-300";
 
     switch (ctaVariant) {
       case "glassmorphic":
@@ -51,7 +55,7 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
 
       case "animated":
         return (
-          <MicroInteraction variant="lift">
+          <MicroInteraction effect="lift">
             <button
               onClick={onGetStarted}
               className={`${baseClasses} bg-gradient-animated text-white rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105`}
@@ -98,7 +102,7 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
       {/* Main Content */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
         {/* Hero Title */}
-        <MicroInteraction variant="scale">
+        <MicroInteraction effect="scale">
           <Typography
             variant="hero"
             className="mb-6 bg-gradient-brand bg-clip-text text-transparent animate-slide-in-up"
@@ -121,7 +125,7 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-slide-in-up"
           style={{ animationDelay: "0.4s" }}
         >
-          <MicroInteraction variant="lift">
+          <MicroInteraction effect="lift">
             <GlassCard variant="light" className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-brand rounded-lg mx-auto mb-4 flex items-center justify-center">
                 <svg
@@ -147,7 +151,7 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
             </GlassCard>
           </MicroInteraction>
 
-          <MicroInteraction variant="lift">
+          <MicroInteraction effect="lift">
             <GlassCard variant="light" className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-accent rounded-lg mx-auto mb-4 flex items-center justify-center">
                 <svg
@@ -173,7 +177,7 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
             </GlassCard>
           </MicroInteraction>
 
-          <MicroInteraction variant="lift">
+          <MicroInteraction effect="lift">
             <GlassCard variant="light" className="p-6 text-center">
               <div className="w-12 h-12 bg-gradient-success rounded-lg mx-auto mb-4 flex items-center justify-center">
                 <svg
@@ -201,13 +205,18 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
         </div>
 
         {/* Social Proof Statistics */}
-        <div className="mb-12 animate-slide-in-up" style={{ animationDelay: "0.6s" }}>
+        <div
+          className="mb-12 animate-slide-in-up"
+          style={{ animationDelay: "0.6s" }}
+        >
           <GlassCard variant="default" className="p-6 max-w-md mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold bg-gradient-brand bg-clip-text text-transparent mb-2 animate-pulse-glow">
                 {stats[currentStat].number}
               </div>
-              <div className="text-gray-600 text-sm">{stats[currentStat].label}</div>
+              <div className="text-gray-600 text-sm">
+                {stats[currentStat].label}
+              </div>
             </div>
           </GlassCard>
         </div>
@@ -219,7 +228,7 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
         >
           {renderCTA()}
 
-          <MicroInteraction variant="glow">
+          <MicroInteraction effect="glow">
             <button
               onClick={onGetStarted}
               className="px-8 py-4 text-lg font-semibold text-gray-700 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:bg-white hover:shadow-lg transition-all duration-300"
@@ -230,7 +239,10 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
         </div>
 
         {/* Trust Indicators */}
-        <div className="mt-12 animate-slide-in-up" style={{ animationDelay: "1s" }}>
+        <div
+          className="mt-12 animate-slide-in-up"
+          style={{ animationDelay: "1s" }}
+        >
           <Typography variant="body" className="text-gray-500 text-sm mb-4">
             {t("hero.trust.title")}
           </Typography>
@@ -246,7 +258,7 @@ export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSecti
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <MicroInteraction variant="pulse">
+        <MicroInteraction effect="pulse">
           <button
             onClick={onGetStarted}
             className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"

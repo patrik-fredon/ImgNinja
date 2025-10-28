@@ -70,7 +70,9 @@ export function GuidedTour({ isActive, onComplete, onSkip }: GuidedTourProps) {
       const currentStepData = tourSteps[currentStep];
       if (!currentStepData) return;
 
-      const targetElement = document.querySelector(currentStepData.target) as HTMLElement;
+      const targetElement = document.querySelector(
+        currentStepData.target
+      ) as HTMLElement;
       if (targetElement) {
         const rect = targetElement.getBoundingClientRect();
         const scrollX = window.pageXOffset;
@@ -185,7 +187,8 @@ export function GuidedTour({ isActive, onComplete, onSkip }: GuidedTourProps) {
           top: highlightPosition.y,
           width: highlightPosition.width,
           height: highlightPosition.height,
-          boxShadow: "0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.5)",
+          boxShadow:
+            "0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 0 9999px rgba(0, 0, 0, 0.5)",
         }}
       />
 
@@ -197,18 +200,27 @@ export function GuidedTour({ isActive, onComplete, onSkip }: GuidedTourProps) {
           top: tooltipPosition.y,
         }}
       >
-        <MicroInteraction variant="scale">
-          <GlassCard variant="default" className="p-6 max-w-sm animate-slide-in-up">
+        <MicroInteraction effect="scale">
+          <GlassCard
+            variant="default"
+            className="p-6 max-w-sm animate-slide-in-up"
+          >
             {/* Step Counter */}
             <div className="flex items-center justify-between mb-4">
               <div className="text-sm text-gray-500">
-                {t("tour.step")} {currentStep + 1} {t("tour.of")} {tourSteps.length}
+                {t("tour.step")} {currentStep + 1} {t("tour.of")}{" "}
+                {tourSteps.length}
               </div>
               <button
                 onClick={onSkip}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -220,7 +232,9 @@ export function GuidedTour({ isActive, onComplete, onSkip }: GuidedTourProps) {
             </div>
 
             {/* Content */}
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{currentStepData.title}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {currentStepData.title}
+            </h3>
             <p className="text-gray-600 mb-6">{currentStepData.content}</p>
 
             {/* Actions */}
@@ -241,7 +255,9 @@ export function GuidedTour({ isActive, onComplete, onSkip }: GuidedTourProps) {
                   {t("tour.skip")}
                 </button>
                 <GlassButton variant="primary" size="sm" onClick={handleNext}>
-                  {currentStep === tourSteps.length - 1 ? t("tour.finish") : t("tour.next")}
+                  {currentStep === tourSteps.length - 1
+                    ? t("tour.finish")
+                    : t("tour.next")}
                 </GlassButton>
               </div>
             </div>

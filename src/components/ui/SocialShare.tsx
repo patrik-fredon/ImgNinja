@@ -65,8 +65,12 @@ export function SocialShare({
     twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
       url
     )}&text=${encodeURIComponent(title)}&hashtags=${hashtags.join(",")}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      url
+    )}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+      url
+    )}`,
     reddit: `https://reddit.com/submit?url=${encodeURIComponent(
       url
     )}&title=${encodeURIComponent(title)}`,
@@ -77,19 +81,28 @@ export function SocialShare({
   };
 
   const openShareWindow = useCallback((shareUrl: string) => {
-    window.open(shareUrl, "share", "width=600,height=400,scrollbars=yes,resizable=yes");
+    window.open(
+      shareUrl,
+      "share",
+      "width=600,height=400,scrollbars=yes,resizable=yes"
+    );
   }, []);
 
   return (
     <div className={`flex flex-wrap items-center gap-3 ${className}`}>
       {/* Native Share Button (Mobile) */}
-      {typeof navigator !== "undefined" && navigator.share && (
+      {typeof navigator !== "undefined" && "share" in navigator && (
         <button
           onClick={handleNativeShare}
           disabled={isSharing}
           className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors disabled:opacity-50"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -153,7 +166,12 @@ export function SocialShare({
           className="p-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors relative"
           title="Copy Link"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

@@ -1,10 +1,20 @@
 "use client";
 
-import { useCallback, useState, useRef, DragEvent, ChangeEvent, useEffect } from "react";
+import {
+  useCallback,
+  useState,
+  useRef,
+  DragEvent,
+  ChangeEvent,
+  useEffect,
+} from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/Card";
 import { TouchOptimizedButton } from "@/components/ui/TouchOptimizedButton";
-import { validateFile, type ValidationResult } from "@/lib/converter/validation";
+import {
+  validateFile,
+  type ValidationResult,
+} from "@/lib/converter/validation";
 import { formatFileSize } from "@/lib/utils/file-size";
 import { recommendFormat } from "@/lib/converter/recommendations";
 
@@ -47,7 +57,9 @@ export function FileUpload({
     const checkMobile = () => {
       setIsMobile(
         window.innerWidth < 768 ||
-          /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+          /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+          )
       );
     };
 
@@ -108,7 +120,9 @@ export function FileUpload({
       setSelectedFiles(filesWithPreviews);
 
       // Pass valid files to parent
-      const validFiles = filesWithPreviews.filter((f) => !f.error).map((f) => f.file);
+      const validFiles = filesWithPreviews
+        .filter((f) => !f.error)
+        .map((f) => f.file);
 
       onFilesSelected(validFiles);
       setIsProcessing(false);
@@ -125,7 +139,9 @@ export function FileUpload({
     });
   };
 
-  const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+  const getImageDimensions = (
+    file: File
+  ): Promise<{ width: number; height: number }> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
@@ -209,12 +225,12 @@ export function FileUpload({
         variant="outlined"
         className={`relative transition-all duration-500 ease-out transform ${
           isDragOver
-            ? "border-brand-500 bg-gradient-to-br from-brand-50 to-accent-purple/10 shadow-2xl scale-[1.03] rotate-1"
+            ? "border-brand-500 bg-linear-to-br from-brand-50 to-accent-purple/10 shadow-2xl scale-[1.03] rotate-1"
             : "border-gray-300 hover:border-brand-300 hover:shadow-lg hover:scale-[1.01]"
         } ${isProcessing ? "animate-pulse" : ""}`}
       >
         {isDragOver && (
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-500/20 to-accent-purple/20 rounded-lg animate-pulse" />
+          <div className="absolute inset-0 bg-linear-to-br from-brand-500/20 to-accent-purple/20 rounded-lg animate-pulse" />
         )}
 
         <CardContent
@@ -227,12 +243,12 @@ export function FileUpload({
         >
           <div className="space-y-4 sm:space-y-6">
             <div
-              className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-brand-100 to-accent-purple/20 rounded-2xl flex items-center justify-center transition-all duration-500 ease-out ${
+              className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-linear-to-br from-brand-100 to-accent-purple/20 rounded-2xl flex items-center justify-center transition-all duration-500 ease-out ${
                 isDragOver
                   ? "scale-125 rotate-12 shadow-lg"
                   : isProcessing
-                    ? "scale-110 animate-bounce"
-                    : "hover:scale-105"
+                  ? "scale-110 animate-bounce"
+                  : "hover:scale-105"
               }`}
             >
               <svg
@@ -240,8 +256,8 @@ export function FileUpload({
                   isDragOver
                     ? "text-brand-600 scale-110"
                     : isProcessing
-                      ? "text-brand-500 animate-spin"
-                      : "text-brand-500"
+                    ? "text-brand-500 animate-spin"
+                    : "text-brand-500"
                 }`}
                 fill="none"
                 stroke="currentColor"
@@ -270,8 +286,8 @@ export function FileUpload({
                 {isDragOver
                   ? t("converter.upload.dropHere")
                   : isProcessing
-                    ? t("converter.upload.processing")
-                    : t("converter.upload.dragDrop")}
+                  ? t("converter.upload.processing")
+                  : t("converter.upload.dragDrop")}
               </p>
               <p className="text-base text-gray-600 mt-2 font-medium">
                 {!isProcessing && t("converter.upload.orClick")}
@@ -405,7 +421,8 @@ export function FileUpload({
                       <p>{formatFileSize(fileWithPreview.file.size)}</p>
                       {fileWithPreview.dimensions && (
                         <p>
-                          {fileWithPreview.dimensions.width} × {fileWithPreview.dimensions.height}px
+                          {fileWithPreview.dimensions.width} ×{" "}
+                          {fileWithPreview.dimensions.height}px
                         </p>
                       )}
                       {fileWithPreview.recommendation && (

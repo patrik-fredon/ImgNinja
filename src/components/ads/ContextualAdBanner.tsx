@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactElement } from "react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 interface ContextualAdBannerProps {
@@ -23,7 +23,8 @@ const CONTEXTUAL_ADS: Record<string, ContextualAdContent[]> = {
   upload: [
     {
       title: "Organize Your Photos",
-      description: "Keep your image library organized with smart tagging and folders.",
+      description:
+        "Keep your image library organized with smart tagging and folders.",
       ctaText: "Try Free",
       targetUrl: "#",
       sponsor: "PhotoManager",
@@ -43,7 +44,8 @@ const CONTEXTUAL_ADS: Record<string, ContextualAdContent[]> = {
   conversion: [
     {
       title: "Batch Processing Tools",
-      description: "Convert hundreds of images at once with professional batch tools.",
+      description:
+        "Convert hundreds of images at once with professional batch tools.",
       ctaText: "Learn More",
       targetUrl: "#",
       sponsor: "BatchPro",
@@ -63,7 +65,8 @@ const CONTEXTUAL_ADS: Record<string, ContextualAdContent[]> = {
   download: [
     {
       title: "Share Your Images",
-      description: "Create shareable links and galleries for your converted images.",
+      description:
+        "Create shareable links and galleries for your converted images.",
       ctaText: "Share Now",
       targetUrl: "#",
       sponsor: "ShareHub",
@@ -92,7 +95,8 @@ const CONTEXTUAL_ADS: Record<string, ContextualAdContent[]> = {
     },
     {
       title: "Format Converter Pro",
-      description: "Handle any image format with our professional conversion tools.",
+      description:
+        "Handle any image format with our professional conversion tools.",
       ctaText: "Upgrade",
       targetUrl: "#",
       sponsor: "ConvertPro",
@@ -103,7 +107,7 @@ const CONTEXTUAL_ADS: Record<string, ContextualAdContent[]> = {
 };
 
 const getIcon = (iconName: string) => {
-  const icons: Record<string, JSX.Element> = {
+  const icons: Record<string, ReactElement> = {
     folder: (
       <path
         strokeLinecap="round"
@@ -173,7 +177,11 @@ const getIcon = (iconName: string) => {
   return icons[iconName] || icons.folder;
 };
 
-export function ContextualAdBanner({ context, className = "", onClose }: ContextualAdBannerProps) {
+export function ContextualAdBanner({
+  context,
+  className = "",
+  onClose,
+}: ContextualAdBannerProps) {
   const [adContent, setAdContent] = useState<ContextualAdContent | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [hasTrackedImpression, setHasTrackedImpression] = useState(false);
@@ -182,7 +190,8 @@ export function ContextualAdBanner({ context, className = "", onClose }: Context
   useEffect(() => {
     const contextAds = CONTEXTUAL_ADS[context];
     if (contextAds && contextAds.length > 0) {
-      const randomAd = contextAds[Math.floor(Math.random() * contextAds.length)];
+      const randomAd =
+        contextAds[Math.floor(Math.random() * contextAds.length)];
       setAdContent(randomAd);
       setIsVisible(true);
     }
@@ -190,14 +199,20 @@ export function ContextualAdBanner({ context, className = "", onClose }: Context
 
   useEffect(() => {
     if (isVisible && adContent && !hasTrackedImpression) {
-      trackAdImpression(`contextual-${context}`, `banner-${adContent.sponsor.toLowerCase()}`);
+      trackAdImpression(
+        `contextual-${context}`,
+        `banner-${adContent.sponsor.toLowerCase()}`
+      );
       setHasTrackedImpression(true);
     }
   }, [isVisible, adContent, hasTrackedImpression, context, trackAdImpression]);
 
   const handleAdClick = () => {
     if (adContent) {
-      trackAdClick(`contextual-${context}`, `banner-${adContent.sponsor.toLowerCase()}`);
+      trackAdClick(
+        `contextual-${context}`,
+        `banner-${adContent.sponsor.toLowerCase()}`
+      );
       console.log("Contextual ad clicked:", adContent.targetUrl);
     }
   };
@@ -221,7 +236,12 @@ export function ContextualAdBanner({ context, className = "", onClose }: Context
           onClick={handleClose}
           className="absolute top-2 right-2 text-white/70 hover:text-white transition-colors"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -237,21 +257,35 @@ export function ContextualAdBanner({ context, className = "", onClose }: Context
         <span className="text-xs text-white/70 font-medium">Sponsored</span>
       </div>
 
-      <div className="flex items-center space-x-4 cursor-pointer" onClick={handleAdClick}>
+      <div
+        className="flex items-center space-x-4 cursor-pointer"
+        onClick={handleAdClick}
+      >
         {/* Icon */}
         <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center shrink-0">
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-6 h-6 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             {getIcon(adContent.icon)}
           </svg>
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-white mb-1">{adContent.title}</h3>
-          <p className="text-xs text-white/90 mb-2 line-clamp-2">{adContent.description}</p>
+          <h3 className="text-sm font-semibold text-white mb-1">
+            {adContent.title}
+          </h3>
+          <p className="text-xs text-white/90 mb-2 line-clamp-2">
+            {adContent.description}
+          </p>
 
           <div className="flex items-center justify-between">
-            <span className="text-xs text-white/70">by {adContent.sponsor}</span>
+            <span className="text-xs text-white/70">
+              by {adContent.sponsor}
+            </span>
             <button className="text-xs bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-md transition-colors backdrop-blur-sm">
               {adContent.ctaText}
             </button>

@@ -3,12 +3,14 @@
 export interface ConversionEvent {
   id: string;
   type:
-    | "file_upload"
-    | "conversion_start"
-    | "conversion_complete"
-    | "download"
-    | "ad_click"
-    | "page_view";
+  | "file_upload"
+  | "conversion_start"
+  | "conversion_complete"
+  | "download"
+  | "ad_click"
+  | "ad_impression"
+  | "mobile_interaction"
+  | "page_view";
   timestamp: Date;
   sessionId: string;
   userId: string;

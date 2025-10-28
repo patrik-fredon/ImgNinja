@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { ResponsiveAdContainer } from "@/components/ads/ResponsiveAdContainer";
+import { ConversionHistory } from "@/components/converter/ConversionHistory";
+import { UserPreferences } from "@/components/converter/UserPreferences";
+import { GlassModal } from "@/components/ui/GlassModal";
 
 export function Header() {
   const t = useTranslations();
@@ -12,6 +15,10 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showPreferences, setShowPreferences] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   const switchLanguage = (newLocale: string) => {
     const currentPath = pathname.replace(`/${locale}`, "");
@@ -21,6 +28,35 @@ export function Header() {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen(!isUserMenuOpen);
+  };
+
+  const openHistory = () => {
+    setShowHistory(true);
+    setIsUserMenuOpen(false);
+  };
+
+  const openPreferences = () => {
+    setShowPreferences(true);
+    setIsUserMenuOpen(false);
+  };
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
@@ -59,7 +95,9 @@ export function Header() {
                   />
                 </svg>
               </div>
-              <span className="text-lg sm:text-xl font-bold text-gray-900 truncate">ImgNinja</span>
+              <span className="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                ImgNinja
+              </span>
             </button>
           </div>
 
@@ -85,8 +123,81 @@ export function Header() {
             </button>
           </nav>
 
-          {/* Language Switcher & Mobile Menu Button */}
+          {/* User Menu, Language Switcher & Mobile Menu Button */}
           <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* User Menu (Desktop) */}
+            <div className="hidden md:block relative" ref={userMenuRef}>
+              <button
+                onClick={toggleUserMenu}
+                className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+                aria-label="User menu"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </button>
+
+              {/* User Dropdown Menu */}
+              {isUserMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                  <button
+                    onClick={openHistory}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center space-x-2"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>History</span>
+                  </button>
+                  <button
+                    onClick={openPreferences}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center space-x-2"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    <span>Preferences</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Language Switcher */}
             <div className="flex items-center space-x-1 bg-gray-100 rounded-md p-1">
               <button
@@ -167,6 +278,56 @@ export function Header() {
               </button>
               <button
                 onClick={() => {
+                  openHistory();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-left text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors font-medium py-3 px-2 rounded-md touch-manipulation min-h-[44px] flex items-center space-x-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>History</span>
+              </button>
+              <button
+                onClick={() => {
+                  openPreferences();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-left text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors font-medium py-3 px-2 rounded-md touch-manipulation min-h-[44px] flex items-center space-x-2"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                <span>Preferences</span>
+              </button>
+              <button
+                onClick={() => {
                   router.push(`/${locale}/privacy`);
                   setIsMobileMenuOpen(false);
                 }}
@@ -178,6 +339,26 @@ export function Header() {
           </div>
         )}
       </div>
+
+      {/* History Modal */}
+      <GlassModal
+        isOpen={showHistory}
+        onClose={() => setShowHistory(false)}
+        title="Conversion History"
+        size="xl"
+      >
+        <ConversionHistory />
+      </GlassModal>
+
+      {/* Preferences Modal */}
+      <GlassModal
+        isOpen={showPreferences}
+        onClose={() => setShowPreferences(false)}
+        title="User Preferences"
+        size="xl"
+      >
+        <UserPreferences />
+      </GlassModal>
     </header>
   );
 }

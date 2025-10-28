@@ -44,9 +44,13 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   compressionLevel: "medium",
 };
 
-export function UserPreferences({ className = "", onPreferencesChange }: UserPreferencesProps) {
+export function UserPreferences({
+  className = "",
+  onPreferencesChange,
+}: UserPreferencesProps) {
   const t = useTranslations();
-  const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
+  const [preferences, setPreferences] =
+    useState<UserPreferences>(DEFAULT_PREFERENCES);
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
@@ -67,14 +71,20 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
 
   const savePreferences = (newPreferences: UserPreferences) => {
     try {
-      localStorage.setItem("imgninja_user_preferences", JSON.stringify(newPreferences));
+      localStorage.setItem(
+        "imgninja_user_preferences",
+        JSON.stringify(newPreferences)
+      );
       setPreferences(newPreferences);
       setHasChanges(false);
       onPreferencesChange?.(newPreferences);
 
       // Apply theme immediately
       if (newPreferences.theme !== "auto") {
-        document.documentElement.setAttribute("data-theme", newPreferences.theme);
+        document.documentElement.setAttribute(
+          "data-theme",
+          newPreferences.theme
+        );
       } else {
         document.documentElement.removeAttribute("data-theme");
       }
@@ -83,14 +93,19 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
     }
   };
 
-  const updatePreference = <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => {
+  const updatePreference = <K extends keyof UserPreferences>(
+    key: K,
+    value: UserPreferences[K]
+  ) => {
     const newPreferences = { ...preferences, [key]: value };
     setPreferences(newPreferences);
     setHasChanges(true);
   };
 
   const resetToDefaults = () => {
-    if (confirm("Are you sure you want to reset all preferences to defaults?")) {
+    if (
+      confirm("Are you sure you want to reset all preferences to defaults?")
+    ) {
       savePreferences(DEFAULT_PREFERENCES);
     }
   };
@@ -109,7 +124,9 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `imgninja_preferences_${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `imgninja_preferences_${
+      new Date().toISOString().split("T")[0]
+    }.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -147,10 +164,15 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
               Export
             </Button>
             <label className="cursor-pointer">
-              <Button size="sm" variant="outline" as="span">
+              <Button size="sm" variant="outline">
                 Import
               </Button>
-              <input type="file" accept=".json" onChange={importPreferences} className="hidden" />
+              <input
+                type="file"
+                accept=".json"
+                onChange={importPreferences}
+                className="hidden"
+              />
             </label>
             <Button size="sm" variant="outline" onClick={resetToDefaults}>
               Reset
@@ -162,13 +184,22 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
       <CardContent className="space-y-6">
         {/* Conversion Defaults */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Conversion Defaults</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Conversion Defaults
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Default Format</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Default Format
+              </label>
               <select
                 value={preferences.defaultFormat}
-                onChange={(e) => updatePreference("defaultFormat", e.target.value as OutputFormat)}
+                onChange={(e) =>
+                  updatePreference(
+                    "defaultFormat",
+                    e.target.value as OutputFormat
+                  )
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 {Object.entries(FORMATS).map(([format, data]) => (
@@ -189,7 +220,9 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
                 max="100"
                 step="5"
                 value={preferences.defaultQuality}
-                onChange={(e) => updatePreference("defaultQuality", parseInt(e.target.value))}
+                onChange={(e) =>
+                  updatePreference("defaultQuality", parseInt(e.target.value))
+                }
                 className="w-full"
               />
             </div>
@@ -224,7 +257,9 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
                 max="50"
                 step="1"
                 value={preferences.maxFileSize}
-                onChange={(e) => updatePreference("maxFileSize", parseInt(e.target.value))}
+                onChange={(e) =>
+                  updatePreference("maxFileSize", parseInt(e.target.value))
+                }
                 className="w-full"
               />
             </div>
@@ -233,7 +268,9 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
 
         {/* File Naming */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">File Naming</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            File Naming
+          </h3>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -254,7 +291,8 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
                       onChange={(e) =>
                         updatePreference(
                           "preferredFileNaming",
-                          e.target.value as UserPreferences["preferredFileNaming"]
+                          e.target
+                            .value as UserPreferences["preferredFileNaming"]
                         )
                       }
                       className="mr-2"
@@ -273,7 +311,9 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
                 <input
                   type="text"
                   value={preferences.customFilePrefix}
-                  onChange={(e) => updatePreference("customFilePrefix", e.target.value)}
+                  onChange={(e) =>
+                    updatePreference("customFilePrefix", e.target.value)
+                  }
                   placeholder="e.g., converted_"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
@@ -290,7 +330,8 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
               {
                 key: "autoDownload",
                 label: "Auto-download converted files",
-                description: "Automatically start download when conversion completes",
+                description:
+                  "Automatically start download when conversion completes",
               },
               {
                 key: "showAdvancedOptions",
@@ -300,7 +341,8 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
               {
                 key: "autoOptimize",
                 label: "Auto-optimize settings",
-                description: "Automatically suggest optimal settings for each image",
+                description:
+                  "Automatically suggest optimal settings for each image",
               },
               {
                 key: "saveHistory",
@@ -310,21 +352,30 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
               {
                 key: "enableNotifications",
                 label: "Enable notifications",
-                description: "Show browser notifications for completed conversions",
+                description:
+                  "Show browser notifications for completed conversions",
               },
             ].map((setting) => (
               <div key={setting.key} className="flex items-start">
                 <input
                   type="checkbox"
                   id={setting.key}
-                  checked={preferences[setting.key as keyof UserPreferences] as boolean}
+                  checked={
+                    preferences[setting.key as keyof UserPreferences] as boolean
+                  }
                   onChange={(e) =>
-                    updatePreference(setting.key as keyof UserPreferences, e.target.checked as any)
+                    updatePreference(
+                      setting.key as keyof UserPreferences,
+                      e.target.checked as any
+                    )
                   }
                   className="mt-1 mr-3"
                 />
                 <div>
-                  <label htmlFor={setting.key} className="font-medium text-gray-900 cursor-pointer">
+                  <label
+                    htmlFor={setting.key}
+                    className="font-medium text-gray-900 cursor-pointer"
+                  >
                     {setting.label}
                   </label>
                   <p className="text-sm text-gray-600">{setting.description}</p>
@@ -336,14 +387,21 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
 
         {/* Appearance */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Appearance</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Appearance
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Theme</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Theme
+              </label>
               <select
                 value={preferences.theme}
                 onChange={(e) =>
-                  updatePreference("theme", e.target.value as UserPreferences["theme"])
+                  updatePreference(
+                    "theme",
+                    e.target.value as UserPreferences["theme"]
+                  )
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
@@ -354,11 +412,16 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Language
+              </label>
               <select
                 value={preferences.language}
                 onChange={(e) =>
-                  updatePreference("language", e.target.value as UserPreferences["language"])
+                  updatePreference(
+                    "language",
+                    e.target.value as UserPreferences["language"]
+                  )
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
@@ -372,7 +435,9 @@ export function UserPreferences({ className = "", onPreferencesChange }: UserPre
         {/* Save Button */}
         {hasChanges && (
           <div className="flex justify-end pt-4 border-t border-gray-200">
-            <Button onClick={() => savePreferences(preferences)}>Save Preferences</Button>
+            <Button onClick={() => savePreferences(preferences)}>
+              Save Preferences
+            </Button>
           </div>
         )}
       </CardContent>

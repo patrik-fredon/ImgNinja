@@ -12,7 +12,10 @@ interface FeatureIntroductionProps {
   onDismiss: () => void;
 }
 
-export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroductionProps) {
+export function FeatureIntroduction({
+  onStartTour,
+  onDismiss,
+}: FeatureIntroductionProps) {
   const t = useTranslations();
   const [currentFeature, setCurrentFeature] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -20,7 +23,12 @@ export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroduct
   const features = [
     {
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -35,7 +43,12 @@ export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroduct
     },
     {
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -50,7 +63,12 @@ export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroduct
     },
     {
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -65,7 +83,12 @@ export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroduct
     },
     {
       icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-8 h-8"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -97,7 +120,7 @@ export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroduct
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
-      <MicroInteraction variant="scale">
+      <MicroInteraction effect="scale">
         <GlassCard
           variant="default"
           className={`max-w-md w-full p-8 animate-slide-in-up transition-opacity duration-300 ${
@@ -125,10 +148,16 @@ export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroduct
             </div>
 
             <div className="text-center min-h-[120px] flex flex-col justify-center">
-              <Typography variant="body" className="font-semibold mb-2 animate-fade-in">
+              <Typography
+                variant="body"
+                className="font-semibold mb-2 animate-fade-in"
+              >
                 {features[currentFeature].title}
               </Typography>
-              <Typography variant="body" className="text-gray-600 text-sm animate-fade-in">
+              <Typography
+                variant="body"
+                className="text-gray-600 text-sm animate-fade-in"
+              >
                 {features[currentFeature].description}
               </Typography>
             </div>
@@ -173,7 +202,12 @@ export function FeatureIntroduction({ onStartTour, onDismiss }: FeatureIntroduct
             onClick={handleDismiss}
             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

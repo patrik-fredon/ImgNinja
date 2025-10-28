@@ -4,7 +4,13 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useMobileDetection } from "@/hooks/useMobileDetection";
 import { OptimizedAdPlacement } from "./OptimizedAdPlacement";
 // Simple X icon component
-const XIcon = ({ size = 16, className = "" }: { size?: number; className?: string }) => (
+const XIcon = ({
+  size = 16,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) => (
   <svg
     width={size}
     height={size}
@@ -60,8 +66,8 @@ export function MobileInterstitialAd({
     lastShown: 0,
   });
 
-  const triggerTimeoutRef = useRef<NodeJS.Timeout>();
-  const interactionTimeoutRef = useRef<NodeJS.Timeout>();
+  const triggerTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Minimum time between interstitials (5 minutes)
   const MIN_INTERVAL = 5 * 60 * 1000;
@@ -69,7 +75,9 @@ export function MobileInterstitialAd({
   // Check if enough time has passed since last interstitial
   const canShowInterstitial = useCallback(() => {
     const now = Date.now();
-    const lastShown = parseInt(localStorage.getItem("last-interstitial") || "0");
+    const lastShown = parseInt(
+      localStorage.getItem("last-interstitial") || "0"
+    );
     return now - lastShown > MIN_INTERVAL;
   }, []);
 
@@ -267,7 +275,9 @@ export function MobileInterstitialAd({
                     <span className="text-white font-bold text-lg">Ad</span>
                   </div>
                   <p className="text-sm text-gray-600">Advertisement</p>
-                  <p className="text-xs text-gray-400">Support our free service</p>
+                  <p className="text-xs text-gray-400">
+                    Support our free service
+                  </p>
                 </div>
               </div>
             }

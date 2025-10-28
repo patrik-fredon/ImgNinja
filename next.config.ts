@@ -25,14 +25,6 @@ const nextConfig: NextConfig = {
     webVitalsAttribution: ["CLS", "LCP", "FID", "FCP", "TTFB"],
     optimizeCss: true,
     scrollRestoration: true,
-    turbo: {
-      rules: {
-        "*.{js,ts,tsx}": {
-          loaders: ["swc-loader"],
-          as: "*.js",
-        },
-      },
-    },
   },
 
   // Tree shaking and optimization

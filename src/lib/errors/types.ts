@@ -9,6 +9,8 @@ export type ErrorCode =
 
   // Conversion errors
   | "CONVERSION_FAILED"
+  | "BATCH_CONVERSION_FAILED"
+  | "ENHANCED_WORKER_ERROR"
   | "CANVAS_ERROR"
   | "WORKER_ERROR"
   | "MEMORY_ERROR"
@@ -106,7 +108,7 @@ export function createValidationError(
 export function createConversionError(
   code: Extract<
     ErrorCode,
-    "CONVERSION_FAILED" | "CANVAS_ERROR" | "WORKER_ERROR" | "MEMORY_ERROR" | "TIMEOUT_ERROR"
+    "CONVERSION_FAILED" | "BATCH_CONVERSION_FAILED" | "ENHANCED_WORKER_ERROR" | "CANVAS_ERROR" | "WORKER_ERROR" | "MEMORY_ERROR" | "TIMEOUT_ERROR"
   >,
   message: string,
   details?: string,

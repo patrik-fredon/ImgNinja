@@ -26,6 +26,7 @@ export { MobileFormatSelector } from "./MobileFormatSelector";
 export { ImageAnalysis } from "./ImageAnalysis";
 export { MetadataViewer } from "./MetadataViewer";
 export { ColorPalette } from "./ColorPalette";
+export { ImageAnalysisDemo } from "./ImageAnalysisDemo";
 
 // Format comparison and education center (Task 10.2)
 export { FormatEducationCenter } from "./FormatEducationCenter";

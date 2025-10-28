@@ -40,7 +40,7 @@ interface ErrorMessage {
   stage: string;
 }
 
-type WorkerResponse = ProgressMessage | SuccessMessage | ErrorMessage;
+type EnhancedWorkerResponse = ProgressMessage | SuccessMessage | ErrorMessage;
 
 class MemoryMonitor {
   private startMemory: number = 0;

@@ -1,407 +1,336 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import {
+  GlassCard,
+  GlassCardContent,
+  GlassCardHeader,
+  GlassCardTitle,
+} from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
+import { Tooltip } from "@/components/ui/Tooltip";
 import type { ColorInfo } from "@/lib/converter/analysis";
 
 interface ColorPaletteProps {
-  file: File;
+  colors: ColorInfo[];
   className?: string;
+  showPercentages?: boolean;
+  maxColors?: number;
 }
 
-interface ExtractedPalette {
-  dominant: ColorInfo[];
-  complementary: ColorInfo[];
-  analogous: ColorInfo[];
-  triadic: ColorInfo[];
-}
-
-export function ColorPalette({ file, className = "" }: ColorPaletteProps) {
+export function ColorPalette({
+  colors,
+  className = "",
+  showPercentages = true,
+  maxColors = 10,
+}: ColorPaletteProps) {
   const t = useTranslations();
-  const [palette, setPalette] = useState<ExtractedPalette | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedColor, setSelectedColor] = useState<ColorInfo | null>(null);
-  const [viewMode, setViewMode] = useState<"dominant" | "complementary" | "analogous" | "triadic">(
-    "dominant"
-  );
+  const [copiedColor, setCopiedColor] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  useEffect(() => {
-    const extractColors = async () => {
-      setIsLoading(true);
+  const displayColors = colors.slice(0, maxColors);
 
-      try {
-        const bitmap = await createImageBitmap(file);
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+  const copyColor = async (color: ColorInfo, format: "hex" | "rgb" | "hsl") => {
+    let colorValue: string;
 
-        if (!ctx) {
-          throw new Error("Canvas context not available");
-        }
-
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
-        ctx.drawImage(bitmap, 0, 0);
-
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const extractedPalette = await analyzeImageColors(imageData);
-
-        setPalette(extractedPalette);
-        bitmap.close();
-      } catch (error) {
-        console.error("Color extraction failed:", error);
-      } finally {
-        setIsLoading(false);
+    switch (format) {
+      case "hex":
+        colorValue = color.hex;
+        break;
+      case "rgb":
+        colorValue = `rgb(${color.rgb.join(", ")})`;
+        break;
+      case "hsl": {
+        const hsl = rgbToHsl(color.rgb[0], color.rgb[1], color.rgb[2]);
+        colorValue = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+        break;
       }
-    };
+    }
 
-    extractColors();
-  }, [file]);
-
-  const handleColorClick = (color: ColorInfo) => {
-    setSelectedColor(color);
-    navigator.clipboard.writeText(color.hex);
+    try {
+      await navigator.clipboard.writeText(colorValue);
+      setCopiedColor(colorValue);
+      setTimeout(() => setCopiedColor(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy color:", err);
+    }
   };
 
-  const handleExportPalette = () => {
-    if (!palette) return;
+  const exportPalette = (format: "css" | "json" | "ase") => {
+    let content: string;
 
-    const exportData = {
-      filename: file.name,
-      palette: palette,
-      exportedAt: new Date().toISOString(),
-    };
+    switch (format) {
+      case "css":
+        content = `:root {\n${displayColors
+          .map((color, index) => `  --color-${index + 1}: ${color.hex};`)
+          .join("\n")}\n}`;
+        break;
+      case "json":
+        content = JSON.stringify(
+          displayColors.map((color) => ({
+            hex: color.hex,
+            rgb: color.rgb,
+            percentage: color.percentage,
+          })),
+          null,
+          2
+        );
+        break;
+      case "ase":
+        // Adobe Swatch Exchange format (simplified)
+        content = displayColors
+          .map((color, index) => `Color ${index + 1}: ${color.hex}`)
+          .join("\n");
+        break;
+    }
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: "application/json",
-    });
-
+    const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${file.name.split(".")[0]}_palette.json`;
-    document.body.appendChild(a);
+    a.download = `palette.${format}`;
     a.click();
-    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-
-  const handleExportCSS = () => {
-    if (!palette) return;
-
-    const cssVariables = palette.dominant
-      .map((color, index) => `  --color-${index + 1}: ${color.hex};`)
-      .join("\n");
-
-    const cssContent = `:root {\n${cssVariables}\n}`;
-
-    const blob = new Blob([cssContent], { type: "text/css" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${file.name.split(".")[0]}_palette.css`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  if (isLoading) {
-    return (
-      <Card className={className}>
-        <CardHeader>
-          <CardTitle>Extracting Colors...</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="animate-pulse space-y-3">
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-12 h-12 bg-gray-200 rounded"></div>
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (!palette) {
-    return (
-      <Card className={className}>
-        <CardContent className="p-4">
-          <div className="text-center text-gray-600">
-            <p>Unable to extract color palette</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const currentPalette = palette[viewMode];
 
   return (
-    <Card className={className}>
-      <CardHeader>
+    <GlassCard className={className}>
+      <GlassCardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Color Palette</CardTitle>
+          <GlassCardTitle>Color Palette</GlassCardTitle>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={handleExportPalette}>
-              Export JSON
+            <Button
+              size="sm"
+              variant={viewMode === "grid" ? "primary" : "outline"}
+              onClick={() => setViewMode("grid")}
+            >
+              Grid
             </Button>
-            <Button size="sm" variant="outline" onClick={handleExportCSS}>
-              Export CSS
+            <Button
+              size="sm"
+              variant={viewMode === "list" ? "primary" : "outline"}
+              onClick={() => setViewMode("list")}
+            >
+              List
             </Button>
           </div>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* View Mode Selector */}
-        <div className="flex gap-2 overflow-x-auto">
-          {(["dominant", "complementary", "analogous", "triadic"] as const).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => setViewMode(mode)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                viewMode === mode
-                  ? "bg-brand-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {mode.charAt(0).toUpperCase() + mode.slice(1)}
-            </button>
-          ))}
-        </div>
-
-        {/* Color Grid */}
-        <div className="space-y-4">
+      </GlassCardHeader>
+      <GlassCardContent className="space-y-4">
+        {/* Color Display */}
+        {viewMode === "grid" ? (
           <div className="grid grid-cols-5 gap-3">
-            {currentPalette.map((color, index) => (
+            {displayColors.map((color, index) => (
               <ColorSwatch
-                key={`${color.hex}-${index}`}
+                key={color.hex}
                 color={color}
-                isSelected={selectedColor?.hex === color.hex}
-                onClick={() => handleColorClick(color)}
+                index={index}
+                showPercentage={showPercentages}
+                onCopy={copyColor}
+                copied={copiedColor === color.hex}
               />
             ))}
           </div>
+        ) : (
+          <div className="space-y-2">
+            {displayColors.map((color, index) => (
+              <ColorRow
+                key={color.hex}
+                color={color}
+                index={index}
+                showPercentage={showPercentages}
+                onCopy={copyColor}
+                copied={copiedColor?.includes(color.hex) || false}
+              />
+            ))}
+          </div>
+        )}
 
-          {/* Selected Color Details */}
-          {selectedColor && (
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h4 className="font-semibold text-gray-900 mb-3">Selected Color</h4>
-              <div className="flex items-center gap-4">
-                <div
-                  className="w-16 h-16 rounded-lg border-2 border-white shadow-md"
-                  style={{ backgroundColor: selectedColor.hex }}
-                />
-                <div className="space-y-2 text-sm">
-                  <div>
-                    <span className="text-gray-600">HEX:</span>
-                    <span className="ml-2 font-mono font-medium">{selectedColor.hex}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">RGB:</span>
-                    <span className="ml-2 font-mono font-medium">
-                      rgb({selectedColor.rgb.join(", ")})
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">HSL:</span>
-                    <span className="ml-2 font-mono font-medium">
-                      {rgbToHsl(selectedColor.rgb[0], selectedColor.rgb[1], selectedColor.rgb[2])}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Usage:</span>
-                    <span className="ml-2 font-medium">{selectedColor.percentage.toFixed(1)}%</span>
-                  </div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-2">Click any color to copy its hex value</p>
+        {/* Color Statistics */}
+        <div className="pt-4 border-t border-white/20">
+          <div className="grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <span className="text-gray-600">Total Colors:</span>
+              <p className="font-medium">{colors.length}</p>
             </div>
-          )}
-        </div>
-
-        {/* Color Harmony Information */}
-        <div className="text-sm text-gray-600">
-          <h4 className="font-semibold text-gray-900 mb-2">Color Harmony Types</h4>
-          <div className="space-y-1">
-            <p>
-              <strong>Dominant:</strong> Most frequently used colors in the image
-            </p>
-            <p>
-              <strong>Complementary:</strong> Colors opposite on the color wheel
-            </p>
-            <p>
-              <strong>Analogous:</strong> Colors adjacent on the color wheel
-            </p>
-            <p>
-              <strong>Triadic:</strong> Three colors evenly spaced on the color wheel
-            </p>
+            <div>
+              <span className="text-gray-600">Dominant:</span>
+              <div className="flex items-center gap-2 mt-1">
+                <div
+                  className="w-4 h-4 rounded border border-gray-300"
+                  style={{ backgroundColor: colors[0]?.hex }}
+                />
+                <span className="font-medium">{colors[0]?.hex}</span>
+              </div>
+            </div>
+            <div>
+              <span className="text-gray-600">Coverage:</span>
+              <p className="font-medium">
+                {displayColors
+                  .reduce((sum, color) => sum + color.percentage, 0)
+                  .toFixed(1)}
+                %
+              </p>
+            </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Export Options */}
+        <div className="pt-4 border-t border-white/20">
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => exportPalette("css")}
+            >
+              Export CSS
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => exportPalette("json")}
+            >
+              Export JSON
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => exportPalette("ase")}
+            >
+              Export ASE
+            </Button>
+          </div>
+        </div>
+      </GlassCardContent>
+    </GlassCard>
   );
 }
 
 interface ColorSwatchProps {
   color: ColorInfo;
-  isSelected: boolean;
-  onClick: () => void;
+  index: number;
+  showPercentage: boolean;
+  onCopy: (color: ColorInfo, format: "hex" | "rgb" | "hsl") => void;
+  copied: boolean;
 }
 
-function ColorSwatch({ color, isSelected, onClick }: ColorSwatchProps) {
+function ColorSwatch({
+  color,
+  index,
+  showPercentage,
+  onCopy,
+  copied,
+}: ColorSwatchProps) {
   return (
-    <div className="text-center">
-      <button
-        onClick={onClick}
-        className={`w-full aspect-square rounded-lg border-2 transition-all hover:scale-105 ${
-          isSelected ? "border-brand-500 ring-2 ring-brand-200" : "border-white shadow-md"
-        }`}
+    <Tooltip content={`${color.hex} (${color.percentage.toFixed(1)}%)`}>
+      <div className="space-y-2">
+        <button
+          type="button"
+          onClick={() => onCopy(color, "hex")}
+          className="w-full aspect-square rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-colors relative overflow-hidden group"
+          style={{ backgroundColor: color.hex }}
+        >
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+            <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+              {copied ? "✓" : "📋"}
+            </span>
+          </div>
+        </button>
+        <div className="text-center">
+          <p className="text-xs font-mono text-gray-700">{color.hex}</p>
+          {showPercentage && (
+            <p className="text-xs text-gray-500">
+              {color.percentage.toFixed(1)}%
+            </p>
+          )}
+        </div>
+      </div>
+    </Tooltip>
+  );
+}
+
+interface ColorRowProps {
+  color: ColorInfo;
+  index: number;
+  showPercentage: boolean;
+  onCopy: (color: ColorInfo, format: "hex" | "rgb" | "hsl") => void;
+  copied: boolean;
+}
+
+function ColorRow({
+  color,
+  index,
+  showPercentage,
+  onCopy,
+  copied,
+}: ColorRowProps) {
+  const hsl = rgbToHsl(color.rgb[0], color.rgb[1], color.rgb[2]);
+
+  return (
+    <div className="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+      <div
+        className="w-12 h-12 rounded-lg border border-gray-300 shrink-0"
         style={{ backgroundColor: color.hex }}
-        title={`${color.hex} (${color.percentage.toFixed(1)}%)`}
       />
-      <p className="text-xs text-gray-600 mt-1 font-mono">{color.hex}</p>
-      <p className="text-xs text-gray-500">{color.percentage.toFixed(1)}%</p>
+
+      <div className="flex-1 space-y-1">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => onCopy(color, "hex")}
+            className="font-mono text-sm hover:text-blue-600 transition-colors"
+          >
+            {color.hex}
+          </button>
+          <button
+            onClick={() => onCopy(color, "rgb")}
+            className="font-mono text-sm text-gray-600 hover:text-blue-600 transition-colors"
+          >
+            rgb({color.rgb.join(", ")})
+          </button>
+          <button
+            onClick={() => onCopy(color, "hsl")}
+            className="font-mono text-sm text-gray-600 hover:text-blue-600 transition-colors"
+          >
+            hsl({hsl[0]}, {hsl[1]}%, {hsl[2]}%)
+          </button>
+        </div>
+        {showPercentage && (
+          <div className="flex items-center gap-2">
+            <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-current transition-all duration-300"
+                style={{
+                  width: `${Math.min(color.percentage, 100)}%`,
+                  backgroundColor: color.hex,
+                }}
+              />
+            </div>
+            <span className="text-xs text-gray-500">
+              {color.percentage.toFixed(1)}%
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-// Utility functions
-async function analyzeImageColors(imageData: ImageData): Promise<ExtractedPalette> {
-  const colorMap = new Map<string, number>();
-  const data = imageData.data;
-
-  // Sample every 4th pixel for performance
-  for (let i = 0; i < data.length; i += 16) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    const a = data[i + 3];
-
-    if (a > 128) {
-      // Only count non-transparent pixels
-      const hex = rgbToHex(r, g, b);
-      colorMap.set(hex, (colorMap.get(hex) || 0) + 1);
-    }
-  }
-
-  // Get dominant colors
-  const sortedColors = Array.from(colorMap.entries())
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 10);
-
-  const totalPixels = sortedColors.reduce((sum, [, count]) => sum + count, 0);
-
-  const dominant: ColorInfo[] = sortedColors.slice(0, 5).map(([hex, count]) => ({
-    hex,
-    rgb: hexToRgb(hex),
-    percentage: (count / totalPixels) * 100,
-  }));
-
-  // Generate color harmonies based on dominant colors
-  const baseColor = dominant[0];
-  const complementary = generateComplementaryColors(baseColor);
-  const analogous = generateAnalogousColors(baseColor);
-  const triadic = generateTriadicColors(baseColor);
-
-  return {
-    dominant,
-    complementary,
-    analogous,
-    triadic,
-  };
-}
-
-function generateComplementaryColors(baseColor: ColorInfo): ColorInfo[] {
-  const [h, s, l] = rgbToHslArray(baseColor.rgb[0], baseColor.rgb[1], baseColor.rgb[2]);
-  const complementaryH = (h + 180) % 360;
-
-  return [
-    baseColor,
-    ...[-30, -15, 15, 30].map((offset) => {
-      const newH = (complementaryH + offset + 360) % 360;
-      const rgb = hslToRgb(newH, s, l);
-      return {
-        hex: rgbToHex(rgb[0], rgb[1], rgb[2]),
-        rgb,
-        percentage: 0,
-      };
-    }),
-  ];
-}
-
-function generateAnalogousColors(baseColor: ColorInfo): ColorInfo[] {
-  const [h, s, l] = rgbToHslArray(baseColor.rgb[0], baseColor.rgb[1], baseColor.rgb[2]);
-
-  return [-60, -30, 0, 30, 60].map((offset) => {
-    const newH = (h + offset + 360) % 360;
-    const rgb = hslToRgb(newH, s, l);
-    return {
-      hex: rgbToHex(rgb[0], rgb[1], rgb[2]),
-      rgb,
-      percentage: offset === 0 ? baseColor.percentage : 0,
-    };
-  });
-}
-
-function generateTriadicColors(baseColor: ColorInfo): ColorInfo[] {
-  const [h, s, l] = rgbToHslArray(baseColor.rgb[0], baseColor.rgb[1], baseColor.rgb[2]);
-
-  return [0, 120, 240]
-    .map((offset) => {
-      const newH = (h + offset) % 360;
-      const rgb = hslToRgb(newH, s, l);
-      return {
-        hex: rgbToHex(rgb[0], rgb[1], rgb[2]),
-        rgb,
-        percentage: offset === 0 ? baseColor.percentage : 0,
-      };
-    })
-    .concat([
-      // Add two more variations
-      ...[-60, 60].map((offset) => {
-        const newH = (h + offset + 360) % 360;
-        const rgb = hslToRgb(newH, s * 0.8, l);
-        return {
-          hex: rgbToHex(rgb[0], rgb[1], rgb[2]),
-          rgb,
-          percentage: 0,
-        };
-      }),
-    ]);
-}
-
-function rgbToHex(r: number, g: number, b: number): string {
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-}
-
-function hexToRgb(hex: string): [number, number, number] {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
-    : [0, 0, 0];
-}
-
-function rgbToHsl(r: number, g: number, b: number): string {
-  const [h, s, l] = rgbToHslArray(r, g, b);
-  return `hsl(${Math.round(h)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
-}
-
-function rgbToHslArray(r: number, g: number, b: number): [number, number, number] {
+// Utility function to convert RGB to HSL
+function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
   r /= 255;
   g /= 255;
   b /= 255;
 
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
-  let h = 0;
-  let s = 0;
-  const l = (max + min) / 2;
+  let h: number, s: number, l: number;
 
-  if (max !== min) {
+  l = (max + min) / 2;
+
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
     const d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
@@ -415,36 +344,12 @@ function rgbToHslArray(r: number, g: number, b: number): [number, number, number
       case b:
         h = (r - g) / d + 4;
         break;
+      default:
+        h = 0;
     }
+
     h /= 6;
   }
 
-  return [h * 360, s, l];
-}
-
-function hslToRgb(h: number, s: number, l: number): [number, number, number] {
-  h /= 360;
-
-  const hue2rgb = (p: number, q: number, t: number) => {
-    if (t < 0) t += 1;
-    if (t > 1) t -= 1;
-    if (t < 1 / 6) return p + (q - p) * 6 * t;
-    if (t < 1 / 2) return q;
-    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-    return p;
-  };
-
-  let r: number, g: number, b: number;
-
-  if (s === 0) {
-    r = g = b = l; // achromatic
-  } else {
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1 / 3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1 / 3);
-  }
-
-  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
 }

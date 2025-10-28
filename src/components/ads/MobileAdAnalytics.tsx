@@ -42,7 +42,7 @@ export function MobileAdAnalytics({
   const sessionStartRef = useRef<number>(Date.now());
   const maxScrollRef = useRef<number>(0);
   const orientationRef = useRef<string>(orientation);
-  const interactionTimeoutRef = useRef<NodeJS.Timeout>();
+  const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize mobile ad tracking
   useEffect(() => {
@@ -98,8 +98,10 @@ export function MobileAdAnalytics({
     if (!enableDetailedTracking) return;
 
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const documentHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = Math.round((scrollTop / documentHeight) * 100);
 
       if (scrollPercent > maxScrollRef.current) {
@@ -223,7 +225,8 @@ export function MobileAdAnalytics({
 
     // Calculate CTR
     if (metricsRef.current.impressions > 0) {
-      metricsRef.current.ctr = (metricsRef.current.clicks / metricsRef.current.impressions) * 100;
+      metricsRef.current.ctr =
+        (metricsRef.current.clicks / metricsRef.current.impressions) * 100;
     }
 
     onMetricsUpdate?.(metricsRef.current);
