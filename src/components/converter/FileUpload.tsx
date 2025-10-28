@@ -1,20 +1,10 @@
 "use client";
 
-import {
-  useCallback,
-  useState,
-  useRef,
-  DragEvent,
-  ChangeEvent,
-  useEffect,
-} from "react";
+import { useCallback, useState, useRef, DragEvent, ChangeEvent, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import {
-  validateFile,
-  type ValidationResult,
-} from "@/lib/converter/validation";
+import { TouchOptimizedButton } from "@/components/ui/TouchOptimizedButton";
+import { validateFile, type ValidationResult } from "@/lib/converter/validation";
 import { formatFileSize } from "@/lib/utils/file-size";
 import { recommendFormat } from "@/lib/converter/recommendations";
 
@@ -57,9 +47,7 @@ export function FileUpload({
     const checkMobile = () => {
       setIsMobile(
         window.innerWidth < 768 ||
-          /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-            navigator.userAgent
-          )
+          /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       );
     };
 
@@ -120,9 +108,7 @@ export function FileUpload({
       setSelectedFiles(filesWithPreviews);
 
       // Pass valid files to parent
-      const validFiles = filesWithPreviews
-        .filter((f) => !f.error)
-        .map((f) => f.file);
+      const validFiles = filesWithPreviews.filter((f) => !f.error).map((f) => f.file);
 
       onFilesSelected(validFiles);
       setIsProcessing(false);
@@ -139,9 +125,7 @@ export function FileUpload({
     });
   };
 
-  const getImageDimensions = (
-    file: File
-  ): Promise<{ width: number; height: number }> => {
+  const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
@@ -247,8 +231,8 @@ export function FileUpload({
                 isDragOver
                   ? "scale-125 rotate-12 shadow-lg"
                   : isProcessing
-                  ? "scale-110 animate-bounce"
-                  : "hover:scale-105"
+                    ? "scale-110 animate-bounce"
+                    : "hover:scale-105"
               }`}
             >
               <svg
@@ -256,8 +240,8 @@ export function FileUpload({
                   isDragOver
                     ? "text-brand-600 scale-110"
                     : isProcessing
-                    ? "text-brand-500 animate-spin"
-                    : "text-brand-500"
+                      ? "text-brand-500 animate-spin"
+                      : "text-brand-500"
                 }`}
                 fill="none"
                 stroke="currentColor"
@@ -286,8 +270,8 @@ export function FileUpload({
                 {isDragOver
                   ? t("converter.upload.dropHere")
                   : isProcessing
-                  ? t("converter.upload.processing")
-                  : t("converter.upload.dragDrop")}
+                    ? t("converter.upload.processing")
+                    : t("converter.upload.dragDrop")}
               </p>
               <p className="text-base text-gray-600 mt-2 font-medium">
                 {!isProcessing && t("converter.upload.orClick")}
@@ -298,14 +282,15 @@ export function FileUpload({
               <>
                 {isMobile && (
                   <div className="flex justify-center gap-3">
-                    <Button
+                    <TouchOptimizedButton
                       variant="outline"
-                      size="sm"
+                      size="md"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleCameraClick();
                       }}
-                      className="flex items-center gap-2 touch-manipulation min-h-[44px]"
+                      className="flex items-center gap-2"
+                      hapticFeedback={true}
                     >
                       <svg
                         className="w-4 h-4"
@@ -327,15 +312,16 @@ export function FileUpload({
                         />
                       </svg>
                       {t("converter.upload.camera")}
-                    </Button>
-                    <Button
+                    </TouchOptimizedButton>
+                    <TouchOptimizedButton
                       variant="outline"
-                      size="sm"
+                      size="md"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleBrowseClick();
                       }}
-                      className="flex items-center gap-2 touch-manipulation min-h-[44px]"
+                      className="flex items-center gap-2"
+                      hapticFeedback={true}
                     >
                       <svg
                         className="w-4 h-4"
@@ -351,7 +337,7 @@ export function FileUpload({
                         />
                       </svg>
                       {t("converter.upload.gallery")}
-                    </Button>
+                    </TouchOptimizedButton>
                   </div>
                 )}
 
@@ -419,8 +405,7 @@ export function FileUpload({
                       <p>{formatFileSize(fileWithPreview.file.size)}</p>
                       {fileWithPreview.dimensions && (
                         <p>
-                          {fileWithPreview.dimensions.width} ×{" "}
-                          {fileWithPreview.dimensions.height}px
+                          {fileWithPreview.dimensions.width} × {fileWithPreview.dimensions.height}px
                         </p>
                       )}
                       {fileWithPreview.recommendation && (
@@ -456,17 +441,18 @@ export function FileUpload({
                     </div>
                   </div>
 
-                  <Button
+                  <TouchOptimizedButton
                     variant="ghost"
                     size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleRemoveFile(index);
                     }}
-                    className="shrink-0 touch-manipulation min-w-[44px] min-h-[44px]"
+                    className="shrink-0"
+                    hapticFeedback={true}
                   >
                     {t("common.remove")}
-                  </Button>
+                  </TouchOptimizedButton>
                 </div>
               </Card>
             ))}

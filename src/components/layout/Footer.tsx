@@ -2,7 +2,7 @@
 
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { AdPlacement } from "./AdPlacement";
+import { ResponsiveAdContainer } from "@/components/ads/ResponsiveAdContainer";
 
 export function Footer() {
   const t = useTranslations();
@@ -39,10 +39,12 @@ export function Footer() {
 
         {/* Footer Ad Placement */}
         <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-100 flex justify-center px-2">
-          <AdPlacement
-            slot="footer"
+          <ResponsiveAdContainer
+            position="footer"
             adUnitId={process.env.NEXT_PUBLIC_GOOGLE_ADS_FOOTER_SLOT}
             className="mx-auto w-full"
+            enableABTesting={true}
+            testId="footer-placement-test"
           />
         </div>
 

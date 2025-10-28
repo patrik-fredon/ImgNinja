@@ -31,14 +31,11 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
     };
 
     const variantClasses = {
-      primary:
-        "text-white shadow-lg hover:shadow-xl focus-visible:ring-white/50",
+      primary: "text-white shadow-lg hover:shadow-xl focus-visible:ring-white/50",
       secondary:
         "text-white/90 hover:text-white shadow-md hover:shadow-lg focus-visible:ring-white/30",
-      accent:
-        "text-white shadow-lg hover:shadow-xl focus-visible:ring-pink-300",
-      ghost:
-        "text-white/80 hover:text-white shadow-sm hover:shadow-md focus-visible:ring-white/20",
+      accent: "text-white shadow-lg hover:shadow-xl focus-visible:ring-pink-300",
+      ghost: "text-white/80 hover:text-white shadow-sm hover:shadow-md focus-visible:ring-white/20",
     };
 
     const sizeClasses = {
@@ -51,23 +48,15 @@ const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
       variant === "primary"
         ? "before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/20 before:to-purple-600/20 before:rounded-xl before:transition-opacity before:duration-300 hover:before:opacity-80"
         : variant === "accent"
-        ? "before:absolute before:inset-0 before:bg-gradient-to-r before:from-pink-500/20 before:to-red-500/20 before:rounded-xl before:transition-opacity before:duration-300 hover:before:opacity-80"
-        : "";
+          ? "before:absolute before:inset-0 before:bg-gradient-to-r before:from-pink-500/20 before:to-red-500/20 before:rounded-xl before:transition-opacity before:duration-300 hover:before:opacity-80"
+          : "";
 
     const classes = `${baseClasses} ${glassClasses[glassVariant]} ${variantClasses[variant]} ${sizeClasses[size]} ${gradientOverlay} ${className}`;
 
     return (
-      <button
-        ref={ref}
-        className={classes}
-        disabled={disabled || loading}
-        {...props}
-      >
+      <button ref={ref} className={classes} disabled={disabled || loading} {...props}>
         {loading && (
-          <svg
-            className="mr-2 h-4 w-4 animate-spin relative z-10"
-            viewBox="0 0 24 24"
-          >
+          <svg className="mr-2 h-4 w-4 animate-spin relative z-10" viewBox="0 0 24 24">
             <circle
               className="opacity-25"
               cx="12"

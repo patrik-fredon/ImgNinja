@@ -23,17 +23,11 @@ interface FormatEstimate {
   reason?: string;
 }
 
-export function FormatComparison({
-  file,
-  onFormatSelect,
-  className = "",
-}: FormatComparisonProps) {
+export function FormatComparison({ file, onFormatSelect, className = "" }: FormatComparisonProps) {
   const t = useTranslations();
   const [estimates, setEstimates] = useState<FormatEstimate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedFormat, setSelectedFormat] = useState<OutputFormat | null>(
-    null
-  );
+  const [selectedFormat, setSelectedFormat] = useState<OutputFormat | null>(null);
 
   useEffect(() => {
     const calculateEstimates = async () => {
@@ -53,19 +47,13 @@ export function FormatComparison({
           // Rough estimation based on format characteristics
           if (format === "webp") {
             estimatedSize = Math.round(originalSize * 0.7); // ~30% savings
-            savings = Math.round(
-              ((originalSize - estimatedSize) / originalSize) * 100
-            );
+            savings = Math.round(((originalSize - estimatedSize) / originalSize) * 100);
           } else if (format === "avif") {
             estimatedSize = Math.round(originalSize * 0.5); // ~50% savings
-            savings = Math.round(
-              ((originalSize - estimatedSize) / originalSize) * 100
-            );
+            savings = Math.round(((originalSize - estimatedSize) / originalSize) * 100);
           } else if (format === "jpeg") {
             estimatedSize = Math.round(originalSize * 0.8); // ~20% savings
-            savings = Math.round(
-              ((originalSize - estimatedSize) / originalSize) * 100
-            );
+            savings = Math.round(((originalSize - estimatedSize) / originalSize) * 100);
           } else if (format === "png") {
             estimatedSize = originalSize; // No compression
             savings = 0;
@@ -79,10 +67,7 @@ export function FormatComparison({
             estimatedSize,
             savings,
             recommended: format === recommendation.format,
-            reason:
-              format === recommendation.format
-                ? recommendation.reason
-                : undefined,
+            reason: format === recommendation.format ? recommendation.reason : undefined,
           });
         }
 
@@ -135,9 +120,7 @@ export function FormatComparison({
             <h3 className="text-lg font-semibold text-gray-900">
               {t("converter.comparison.title")}
             </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              {t("converter.comparison.subtitle")}
-            </p>
+            <p className="text-sm text-gray-600 mt-1">{t("converter.comparison.subtitle")}</p>
           </div>
 
           <div className="space-y-2">
@@ -167,24 +150,16 @@ export function FormatComparison({
                     <div className="flex items-center space-x-3">
                       <div
                         className={`w-3 h-3 rounded-full border-2 ${
-                          isSelected
-                            ? "border-brand-500 bg-brand-500"
-                            : "border-gray-300"
+                          isSelected ? "border-brand-500 bg-brand-500" : "border-gray-300"
                         }`}
                       />
 
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-900">
-                            {formatData.name}
-                          </span>
-                          <span className="text-xs text-gray-500 uppercase">
-                            {estimate.format}
-                          </span>
+                          <span className="font-medium text-gray-900">{formatData.name}</span>
+                          <span className="text-xs text-gray-500 uppercase">{estimate.format}</span>
                         </div>
-                        <p className="text-xs text-gray-600">
-                          {formatData.description}
-                        </p>
+                        <p className="text-xs text-gray-600">{formatData.description}</p>
                       </div>
                     </div>
 
@@ -197,8 +172,8 @@ export function FormatComparison({
                           estimate.savings > 0
                             ? "text-green-600"
                             : estimate.savings < 0
-                            ? "text-red-600"
-                            : "text-gray-500"
+                              ? "text-red-600"
+                              : "text-gray-500"
                         }`}
                       >
                         {estimate.savings > 0 && "-"}
@@ -219,12 +194,8 @@ export function FormatComparison({
 
           <div className="pt-2 border-t border-gray-200">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">
-                {t("converter.comparison.original")}:
-              </span>
-              <span className="font-medium text-gray-900">
-                {formatFileSize(file.size)}
-              </span>
+              <span className="text-gray-600">{t("converter.comparison.original")}:</span>
+              <span className="font-medium text-gray-900">{formatFileSize(file.size)}</span>
             </div>
           </div>
         </div>

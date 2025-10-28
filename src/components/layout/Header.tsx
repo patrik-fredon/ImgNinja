@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { AdPlacement } from "./AdPlacement";
+import { ResponsiveAdContainer } from "@/components/ads/ResponsiveAdContainer";
 
 export function Header() {
   const t = useTranslations();
@@ -27,10 +27,12 @@ export function Header() {
       <div className="max-w-6xl mx-auto px-4">
         {/* Header Ad Placement */}
         <div className="flex justify-center mb-2 sm:mb-4 mt-2 sm:mt-4 px-2">
-          <AdPlacement
-            slot="header"
+          <ResponsiveAdContainer
+            position="header"
             adUnitId={process.env.NEXT_PUBLIC_GOOGLE_ADS_HEADER_SLOT}
             className="mx-auto w-full"
+            enableABTesting={true}
+            testId="header-placement-test"
           />
         </div>
 

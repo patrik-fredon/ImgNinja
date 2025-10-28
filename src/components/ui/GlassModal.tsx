@@ -80,12 +80,7 @@ const GlassModal = forwardRef<HTMLDivElement, GlassModalProps>(
               className="absolute right-4 top-4 glass rounded-full p-2 text-white/80 hover:text-white transition-all duration-200 hover:scale-110"
               aria-label="Close modal"
             >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -136,23 +131,17 @@ const GlassModalTitle = forwardRef<HTMLHeadingElement, GlassModalTitleProps>(
 
 GlassModalTitle.displayName = "GlassModalTitle";
 
-interface GlassModalDescriptionProps
-  extends HTMLAttributes<HTMLParagraphElement> {}
+interface GlassModalDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {}
 
-const GlassModalDescription = forwardRef<
-  HTMLParagraphElement,
-  GlassModalDescriptionProps
->(({ className = "", children, ...props }, ref) => {
-  return (
-    <p
-      ref={ref}
-      className={`mt-2 text-sm text-white/80 drop-shadow-sm ${className}`}
-      {...props}
-    >
-      {children}
-    </p>
-  );
-});
+const GlassModalDescription = forwardRef<HTMLParagraphElement, GlassModalDescriptionProps>(
+  ({ className = "", children, ...props }, ref) => {
+    return (
+      <p ref={ref} className={`mt-2 text-sm text-white/80 drop-shadow-sm ${className}`} {...props}>
+        {children}
+      </p>
+    );
+  }
+);
 
 GlassModalDescription.displayName = "GlassModalDescription";
 
@@ -175,11 +164,7 @@ interface GlassModalFooterProps extends HTMLAttributes<HTMLDivElement> {}
 const GlassModalFooter = forwardRef<HTMLDivElement, GlassModalFooterProps>(
   ({ className = "", children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={`flex items-center justify-end gap-3 ${className}`}
-        {...props}
-      >
+      <div ref={ref} className={`flex items-center justify-end gap-3 ${className}`} {...props}>
         {children}
       </div>
     );

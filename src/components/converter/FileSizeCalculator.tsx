@@ -104,15 +104,11 @@ export function FileSizeCalculator({
     <Card className={className}>
       <CardContent className="p-4">
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">
-            {t("converter.calculator.title")}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t("converter.calculator.title")}</h3>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">
-                {t("converter.calculator.original")}:
-              </span>
+              <span className="text-sm text-gray-600">{t("converter.calculator.original")}:</span>
               <span className="font-medium text-gray-900">
                 {formatFileSize(estimate.originalSize)}
               </span>
@@ -120,8 +116,7 @@ export function FileSizeCalculator({
 
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">
-                {t("converter.calculator.estimated")} (
-                {FORMATS[targetFormat].name}):
+                {t("converter.calculator.estimated")} ({FORMATS[targetFormat].name}):
               </span>
               <span className="font-medium text-gray-900">
                 {formatFileSize(estimate.estimatedSize)}
@@ -139,8 +134,8 @@ export function FileSizeCalculator({
                       estimate.savingsPercent > 0
                         ? "text-green-600"
                         : estimate.savingsPercent < 0
-                        ? "text-red-600"
-                        : "text-gray-600"
+                          ? "text-red-600"
+                          : "text-gray-600"
                     }`}
                   >
                     {estimate.savingsPercent > 0 && "+"}
@@ -151,16 +146,11 @@ export function FileSizeCalculator({
                       estimate.savingsPercent > 0
                         ? "text-green-600"
                         : estimate.savingsPercent < 0
-                        ? "text-red-600"
-                        : "text-gray-600"
+                          ? "text-red-600"
+                          : "text-gray-600"
                     }`}
                   >
-                    (
-                    {estimate.savingsPercent > 0
-                      ? "-"
-                      : estimate.savingsPercent < 0
-                      ? "+"
-                      : ""}
+                    ({estimate.savingsPercent > 0 ? "-" : estimate.savingsPercent < 0 ? "+" : ""}
                     {Math.abs(estimate.savingsPercent)}%)
                   </div>
                 </div>

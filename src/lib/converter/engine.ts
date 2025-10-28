@@ -8,6 +8,9 @@ import {
   type AppError,
 } from "@/lib/errors/types";
 import { logError } from "@/lib/errors/handlers";
+import { WorkerPool, type BatchConversionOptions, type BatchProgressCallback } from "./worker-pool";
+import { MobileOptimizedConverter, type MobileConversionOptions } from "./mobile-optimizer";
+import { ProgressiveImageLoader, type ProgressiveLoadingResult } from "./progressive-loader";
 
 export interface ConversionOptions {
   format: OutputFormat;
@@ -28,10 +31,24 @@ export type ProgressCallback = (progress: number) => void;
 
 export class ImageConverter {
   private worker: Worker | null = null;
+  private workerPool: WorkerPool | null = null;
   private workerSupported: boolean = false;
+  private progressiveLoader: ProgressiveImageLoader | null = null;
+  private deviceCapabilities: ReturnType<
+    typeof MobileOptimizedConverter.detectDeviceCapabilities
+  > | null = null;
 
   constructor() {
     this.workerSupported = typeof Worker !== "undefined" && typeof OffscreenCanvas !== "undefined";
+    if (this.workerSupported) {
+      this.workerPool = new WorkerPool();
+    }
+
+    // Initialize mobile optimizations
+    if (typeof window !== "undefined") {
+      this.progressiveLoader = new ProgressiveImageLoader();
+      this.deviceCapabilities = MobileOptimizedConverter.detectDeviceCapabilities();
+    }
   }
   private async loadImage(file: File): Promise<ImageBitmap> {
     try {
@@ -424,10 +441,199 @@ export class ImageConverter {
     }
   }
 
+  async convertBatch(
+    files: File[],
+    options: ConversionOptions,
+    onProgress?: (fileId: string, progress: number, stage: string) => void
+  ): Promise<ConversionResult[]> {
+    if (!this.workerPool) {
+      throw createBrowserError(
+        "WEBWORKER_NOT_SUPPORTED",
+        "Batch conversion requires Web Worker support",
+        "Web Workers are not available in this browser",
+        { fileCount: files.length }
+      );
+    }
+
+    const batchOptions: BatchConversionOptions = {
+      format: options.format,
+      quality: options.quality,
+      maxWidth: options.maxWidth,
+      maxHeight: options.maxHeight,
+    };
+
+    const progressCallback: BatchProgressCallback = (update) => {
+      onProgress?.(update.fileId, update.progress, update.stage);
+    };
+
+    try {
+      const results = await this.workerPool.convertBatch(files, batchOptions, progressCallback);
+      return results.map((result) => ({
+        blob: result.blob,
+        size: result.size,
+        width: result.width,
+        height: result.height,
+        duration: result.duration,
+      }));
+    } catch (error) {
+      const convertedError = createConversionError(
+        "BATCH_CONVERSION_FAILED",
+        "Batch conversion failed",
+        error instanceof Error ? error.message : "Unknown error",
+        { fileCount: files.length, format: options.format },
+        error instanceof Error ? error : undefined
+      );
+      logError(convertedError.toAppError());
+      throw convertedError;
+    }
+  }
+
+  async convertWithEnhancedWorker(
+    file: File,
+    options: ConversionOptions,
+    onProgress?: (progress: number, stage: string) => void
+  ): Promise<ConversionResult> {
+    if (!this.workerPool) {
+      return this.convertWithWorker(file, options, (progress) =>
+        onProgress?.(progress, "processing")
+      );
+    }
+
+    const batchOptions: BatchConversionOptions = {
+      format: options.format,
+      quality: options.quality,
+      maxWidth: options.maxWidth,
+      maxHeight: options.maxHeight,
+    };
+
+    const progressCallback: BatchProgressCallback = (update) => {
+      onProgress?.(update.progress, update.stage);
+    };
+
+    try {
+      const result = await this.workerPool.convert(file, batchOptions, progressCallback);
+      return {
+        blob: result.blob,
+        size: result.size,
+        width: result.width,
+        height: result.height,
+        duration: result.duration,
+      };
+    } catch (error) {
+      const convertedError = createConversionError(
+        "ENHANCED_WORKER_ERROR",
+        "Enhanced worker conversion failed",
+        error instanceof Error ? error.message : "Unknown error",
+        { fileName: file.name, format: options.format },
+        error instanceof Error ? error : undefined
+      );
+      logError(convertedError.toAppError());
+      throw convertedError;
+    }
+  }
+
+  async convertWithMobileOptimization(
+    file: File,
+    options: ConversionOptions,
+    onProgress?: (progress: number, stage: string) => void
+  ): Promise<ConversionResult> {
+    if (!this.deviceCapabilities) {
+      return this.convert(file, options);
+    }
+
+    try {
+      const mobileOptions: MobileConversionOptions =
+        MobileOptimizedConverter.getMobileOptimizedOptions(options, this.deviceCapabilities);
+
+      const result = await MobileOptimizedConverter.optimizeForMobile(file, mobileOptions);
+
+      onProgress?.(100, "completed");
+
+      return result;
+    } catch (error) {
+      // Fallback to regular conversion
+      console.warn("Mobile optimization failed, falling back to regular conversion:", error);
+      return this.convert(file, options);
+    }
+  }
+
+  async convertWithProgressiveLoading(
+    file: File,
+    options: ConversionOptions,
+    onStageComplete?: (result: ProgressiveLoadingResult) => void
+  ): Promise<ProgressiveLoadingResult[]> {
+    if (!this.progressiveLoader || !this.deviceCapabilities) {
+      const result = await this.convert(file, options);
+      return [
+        {
+          stage: {
+            name: "full",
+            quality: options.quality,
+            maxWidth: options.maxWidth || 2048,
+            maxHeight: options.maxHeight || 2048,
+            description: "Full quality",
+          },
+          blob: result.blob,
+          url: URL.createObjectURL(result.blob),
+          size: result.size,
+          width: result.width,
+          height: result.height,
+          loadTime: result.duration,
+        },
+      ];
+    }
+
+    try {
+      return await this.progressiveLoader.loadProgressively(
+        file,
+        options.format,
+        onStageComplete,
+        this.deviceCapabilities
+      );
+    } catch (error) {
+      // Fallback to regular conversion
+      console.warn("Progressive loading failed, falling back to regular conversion:", error);
+      const result = await this.convert(file, options);
+      return [
+        {
+          stage: {
+            name: "full",
+            quality: options.quality,
+            maxWidth: options.maxWidth || 2048,
+            maxHeight: options.maxHeight || 2048,
+            description: "Full quality",
+          },
+          blob: result.blob,
+          url: URL.createObjectURL(result.blob),
+          size: result.size,
+          width: result.width,
+          height: result.height,
+          loadTime: result.duration,
+        },
+      ];
+    }
+  }
+
+  getDeviceCapabilities() {
+    return this.deviceCapabilities;
+  }
+
+  getWorkerPoolStats() {
+    return this.workerPool?.getStats() || null;
+  }
+
   terminate(): void {
     if (this.worker) {
       this.worker.terminate();
       this.worker = null;
+    }
+    if (this.workerPool) {
+      this.workerPool.terminate();
+      this.workerPool = null;
+    }
+    if (this.progressiveLoader) {
+      this.progressiveLoader.clearCache();
+      this.progressiveLoader = null;
     }
   }
 }

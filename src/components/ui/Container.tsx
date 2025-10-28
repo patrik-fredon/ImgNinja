@@ -6,16 +6,7 @@ interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  (
-    {
-      className = "",
-      size = "default",
-      padding = "responsive",
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className = "", size = "default", padding = "responsive", children, ...props }, ref) => {
     const sizeClasses = {
       narrow: "container-narrow",
       default: "container-responsive",

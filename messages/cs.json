@@ -370,5 +370,14 @@
       "closeOtherTabs": "Zavřít jiné záložky",
       "changeFormat": "Zkusit {format}"
     }
+  },
+  "social": {
+    "share": "Sdílet",
+    "sharing": "Sdílím...",
+    "copied": "Zkopírováno!"
+  },
+  "testimonials": {
+    "title": "Co říkají naši uživatelé",
+    "subtitle": "Připojte se k tisícům spokojených uživatelů, kteří důvěřují ImgNinja pro své potřeby konverze obrázků"
   }
 }

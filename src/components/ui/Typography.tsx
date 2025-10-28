@@ -3,28 +3,11 @@ import { HTMLAttributes, forwardRef, ElementType } from "react";
 interface TypographyProps extends HTMLAttributes<HTMLElement> {
   variant?: "hero" | "title" | "subtitle" | "body-lg" | "body" | "body-sm";
   as?: ElementType;
-  color?:
-    | "default"
-    | "white"
-    | "muted"
-    | "accent"
-    | "success"
-    | "warning"
-    | "error";
+  color?: "default" | "white" | "muted" | "accent" | "success" | "warning" | "error";
 }
 
 const Typography = forwardRef<HTMLElement, TypographyProps>(
-  (
-    {
-      className = "",
-      variant = "body",
-      as,
-      color = "default",
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className = "", variant = "body", as, color = "default", children, ...props }, ref) => {
     const variantClasses = {
       hero: "text-hero",
       title: "text-title",

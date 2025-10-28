@@ -57,17 +57,14 @@ const ResponsiveGrid = forwardRef<HTMLDivElement, ResponsiveGridProps>(
             gridTemplateColumns: `repeat(${columns.lg || 4}, 1fr)`,
           },
           "@media (min-width: 1280px)": {
-            gridTemplateColumns: `repeat(${
-              columns.xl || columns.lg || 4
-            }, 1fr)`,
+            gridTemplateColumns: `repeat(${columns.xl || columns.lg || 4}, 1fr)`,
           },
         }
       : undefined;
 
     // Custom min-width for auto-fit/auto-fill
     const autoGridStyle =
-      (variant === "auto-fit" || variant === "auto-fill") &&
-      minItemWidth !== "280px"
+      (variant === "auto-fit" || variant === "auto-fill") && minItemWidth !== "280px"
         ? {
             gridTemplateColumns: `repeat(${variant}, minmax(${minItemWidth}, 1fr))`,
           }

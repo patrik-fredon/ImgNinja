@@ -4,9 +4,12 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { Inter } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { MobileNavigation } from "@/components/layout/MobileNavigation";
 import { ErrorProvider } from "@/lib/errors/context";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { PerformanceMonitor } from "@/components/ui/PerformanceMonitor";
+import { WebVitalsMonitor } from "@/components/ui/WebVitalsMonitor";
+import { MobileAdProvider } from "@/components/ads/MobileAdProvider";
 import "../globals.css";
 
 const inter = Inter({
@@ -21,9 +24,7 @@ interface RootLayoutProps {
   params: Promise<{ locale: string }>;
 }
 
-export async function generateMetadata({
-  params,
-}: RootLayoutProps): Promise<Metadata> {
+export async function generateMetadata({ params }: RootLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
 
@@ -100,12 +101,8 @@ export async function generateMetadata({
         { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
         { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       ],
-      apple: [
-        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-      ],
-      other: [
-        { rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#5bbad5" },
-      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+      other: [{ rel: "mask-icon", url: "/safari-pinned-tab.svg", color: "#5bbad5" }],
     },
     manifest: "/site.webmanifest",
   };
@@ -116,10 +113,7 @@ interface RootLayoutProps {
   params: Promise<{ locale: string }>;
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: RootLayoutProps) {
+export default async function RootLayout({ children, params }: RootLayoutProps) {
   const { locale } = await params;
   const messages = await getMessages();
 
@@ -129,18 +123,13 @@ export default async function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "ImgNinja",
-    alternateName: [
-      "Image Converter",
-      "Free Image Converter",
-      "Online Image Converter",
-    ],
+    alternateName: ["Image Converter", "Free Image Converter", "Online Image Converter"],
     description:
       "Free online image converter that processes images locally in your browser. Convert between WebP, AVIF, PNG, JPEG formats with complete privacy.",
     url: baseUrl,
     applicationCategory: "MultimediaApplication",
     operatingSystem: "Web Browser",
-    browserRequirements:
-      "Requires JavaScript. Modern browser with Canvas API support.",
+    browserRequirements: "Requires JavaScript. Modern browser with Canvas API support.",
     softwareVersion: "1.0",
     dateCreated: "2024-10-01",
     dateModified: new Date().toISOString().split("T")[0],
@@ -231,21 +220,37 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
 
         {/* Preconnect to critical origins */}
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        {/* Service Worker Registration */}
+        {/* Resource Preloader & Service Worker */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              // Initialize resource preloader
+              (function() {
+                // DNS prefetch
+                const domains = ['//fonts.googleapis.com', '//fonts.gstatic.com', '//pagead2.googlesyndication.com'];
+                domains.forEach(domain => {
+                  const link = document.createElement('link');
+                  link.rel = 'dns-prefetch';
+                  link.href = domain;
+                  document.head.appendChild(link);
+                });
+
+                // Preconnect to critical origins
+                const preconnectLink = document.createElement('link');
+                preconnectLink.rel = 'preconnect';
+                preconnectLink.href = 'https://fonts.gstatic.com';
+                preconnectLink.crossOrigin = 'anonymous';
+                document.head.appendChild(preconnectLink);
+              })();
+
+              // Service Worker registration
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
                   navigator.serviceWorker.register('/sw.js')
@@ -261,16 +266,24 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`min-h-screen flex flex-col font-sans ${inter.className}`}
-      >
+      <body className={`min-h-screen flex flex-col font-sans ${inter.className}`}>
         <NextIntlClientProvider messages={messages}>
           <ErrorProvider>
             <ErrorBoundary>
-              <PerformanceMonitor />
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
+              <MobileAdProvider
+                enableStickyAd={true}
+                enableInterstitialAd={true}
+                enableAnalytics={true}
+                stickyAdUnitId={process.env.NEXT_PUBLIC_MOBILE_STICKY_AD_UNIT}
+                interstitialAdUnitId={process.env.NEXT_PUBLIC_MOBILE_INTERSTITIAL_AD_UNIT}
+              >
+                <PerformanceMonitor />
+                <WebVitalsMonitor />
+                <Header />
+                <main className="flex-1 pb-20 md:pb-0">{children}</main>
+                <Footer />
+                <MobileNavigation />
+              </MobileAdProvider>
             </ErrorBoundary>
           </ErrorProvider>
         </NextIntlClientProvider>

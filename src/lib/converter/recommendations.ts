@@ -107,7 +107,7 @@ async function analyzeFile(file: File): Promise<FileAnalysis> {
   const hasTransparency = await checkTransparency(file);
   const dimensions = await getImageDimensions(file);
   const isPhotographic = await checkIfPhotographic(file);
-  const hasAnimation = file.type === "image/gif" && await checkIfAnimated(file);
+  const hasAnimation = file.type === "image/gif" && (await checkIfAnimated(file));
   const colorCount = await estimateColorCount(file);
 
   return {
@@ -155,8 +155,12 @@ async function checkIfPhotographic(file: File): Promise<boolean> {
 
       // Check for gradual color transitions (indicator of photographic content)
       for (let i = 0; i < data.length - 4; i += 4) {
-        const r1 = data[i], g1 = data[i + 1], b1 = data[i + 2];
-        const r2 = data[i + 4], g2 = data[i + 5], b2 = data[i + 6];
+        const r1 = data[i],
+          g1 = data[i + 1],
+          b1 = data[i + 2];
+        const r2 = data[i + 4],
+          g2 = data[i + 5],
+          b2 = data[i + 6];
 
         const diff = Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
         if (diff > 0 && diff < threshold) {
@@ -183,7 +187,8 @@ async function checkIfAnimated(file: File): Promise<boolean> {
       // Simple check for GIF animation by looking for multiple image descriptors
       let imageCount = 0;
       for (let i = 0; i < arr.length - 1; i++) {
-        if (arr[i] === 0x21 && arr[i + 1] === 0xF9) { // Graphic Control Extension
+        if (arr[i] === 0x21 && arr[i + 1] === 0xf9) {
+          // Graphic Control Extension
           imageCount++;
           if (imageCount > 1) {
             resolve(true);

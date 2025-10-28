@@ -14,9 +14,13 @@ export interface ConversionItem {
   quality: number;
   status: "pending" | "processing" | "complete" | "error";
   progress: number;
+  stage?: string;
   outputBlob?: Blob;
   outputSize?: number;
   error?: string;
+  duration?: number;
+  compressionRatio?: number;
+  memoryPeak?: number;
 }
 
 interface ConversionQueueProps {
@@ -212,12 +216,17 @@ export function ConversionQueue({
 
                 {/* Progress bar */}
                 {(item.status === "processing" || item.status === "complete") && (
-                  <Progress
-                    value={item.progress}
-                    variant={getProgressVariant(item.status)}
-                    size="sm"
-                    showLabel={item.status === "processing"}
-                  />
+                  <div className="space-y-1">
+                    <Progress
+                      value={item.progress}
+                      variant={getProgressVariant(item.status)}
+                      size="sm"
+                      showLabel={item.status === "processing"}
+                    />
+                    {item.stage && item.status === "processing" && (
+                      <div className="text-xs text-gray-500 capitalize">{item.stage}</div>
+                    )}
+                  </div>
                 )}
 
                 {/* Error message */}

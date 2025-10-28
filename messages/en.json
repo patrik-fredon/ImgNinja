@@ -370,5 +370,14 @@
       "closeOtherTabs": "Close Other Tabs",
       "changeFormat": "Try {format}"
     }
+  },
+  "social": {
+    "share": "Share",
+    "sharing": "Sharing...",
+    "copied": "Copied!"
+  },
+  "testimonials": {
+    "title": "What Our Users Say",
+    "subtitle": "Join thousands of satisfied users who trust ImgNinja for their image conversion needs"
   }
 }

@@ -13,9 +13,7 @@ import { formatFileSize } from "@/lib/utils/file-size";
 
 interface SmartFormatDetectionProps {
   files: File[];
-  onRecommendationsReady?: (
-    recommendations: Array<{ file: File; format: OutputFormat }>
-  ) => void;
+  onRecommendationsReady?: (recommendations: Array<{ file: File; format: OutputFormat }>) => void;
   className?: string;
 }
 
@@ -37,9 +35,7 @@ export function SmartFormatDetection({
   className = "",
 }: SmartFormatDetectionProps) {
   const t = useTranslations();
-  const [recommendations, setRecommendations] = useState<FileRecommendation[]>(
-    []
-  );
+  const [recommendations, setRecommendations] = useState<FileRecommendation[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(true);
   const [expandedFile, setExpandedFile] = useState<string | null>(null);
 
@@ -113,12 +109,7 @@ export function SmartFormatDetection({
     switch (priority) {
       case "high":
         return (
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -129,12 +120,7 @@ export function SmartFormatDetection({
         );
       case "medium":
         return (
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -145,12 +131,7 @@ export function SmartFormatDetection({
         );
       case "low":
         return (
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -208,9 +189,7 @@ export function SmartFormatDetection({
             <h3 className="text-lg font-semibold text-gray-900">
               {t("converter.analysis.recommendations")}
             </h3>
-            <p className="text-sm text-gray-600 mt-1">
-              {t("converter.analysis.subtitle")}
-            </p>
+            <p className="text-sm text-gray-600 mt-1">{t("converter.analysis.subtitle")}</p>
           </div>
 
           <div className="space-y-4">
@@ -219,10 +198,7 @@ export function SmartFormatDetection({
               const formatData = FORMATS[fileRec.selectedFormat];
 
               return (
-                <div
-                  key={index}
-                  className="border border-gray-200 rounded-lg overflow-hidden"
-                >
+                <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
                   <div className="p-4 bg-gray-50">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -259,9 +235,7 @@ export function SmartFormatDetection({
                           )}`}
                         >
                           {getPriorityIcon(fileRec.recommendation.priority)}
-                          {t(
-                            `converter.analysis.priority.${fileRec.recommendation.priority}`
-                          )}
+                          {t(`converter.analysis.priority.${fileRec.recommendation.priority}`)}
                         </div>
 
                         <Button
@@ -271,8 +245,7 @@ export function SmartFormatDetection({
                           className="flex items-center gap-2"
                         >
                           <span className="text-sm">
-                            {t("converter.analysis.recommend")}{" "}
-                            {formatData.name}
+                            {t("converter.analysis.recommend")} {formatData.name}
                           </span>
                           <svg
                             className={`w-4 h-4 transition-transform ${
@@ -311,8 +284,7 @@ export function SmartFormatDetection({
                         {t(fileRec.recommendation.reason)}
                       </div>
                       <div className="text-sm font-medium text-green-600">
-                        {t("converter.analysis.savings")}:{" "}
-                        {fileRec.recommendation.savings}
+                        {t("converter.analysis.savings")}: {fileRec.recommendation.savings}
                       </div>
                     </div>
                   </div>
@@ -322,9 +294,7 @@ export function SmartFormatDetection({
                       <div className="grid md:grid-cols-2 gap-6">
                         <FormatComparison
                           file={fileRec.file}
-                          onFormatSelect={(format) =>
-                            handleFormatChange(index, format)
-                          }
+                          onFormatSelect={(format) => handleFormatChange(index, format)}
                         />
 
                         <FileSizeCalculator
@@ -364,11 +334,7 @@ export function SmartFormatDetection({
                   {t("converter.analysis.batchMessage", {
                     count: recommendations.length,
                     formats: [
-                      ...new Set(
-                        recommendations.map(
-                          (r) => FORMATS[r.selectedFormat].name
-                        )
-                      ),
+                      ...new Set(recommendations.map((r) => FORMATS[r.selectedFormat].name)),
                     ].join(", "),
                   })}
                 </p>

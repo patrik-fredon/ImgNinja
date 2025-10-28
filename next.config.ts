@@ -22,9 +22,17 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   experimental: {
     optimizePackageImports: ["@/components", "@/lib"],
-    webVitalsAttribution: ["CLS", "LCP"],
+    webVitalsAttribution: ["CLS", "LCP", "FID", "FCP", "TTFB"],
     optimizeCss: true,
     scrollRestoration: true,
+    turbo: {
+      rules: {
+        "*.{js,ts,tsx}": {
+          loaders: ["swc-loader"],
+          as: "*.js",
+        },
+      },
+    },
   },
 
   // Tree shaking and optimization
@@ -34,6 +42,7 @@ const nextConfig: NextConfig = {
       ...config.optimization,
       usedExports: true,
       sideEffects: false,
+      moduleIds: "deterministic",
     };
 
     // Bundle splitting optimization
@@ -41,6 +50,8 @@ const nextConfig: NextConfig = {
       config.optimization.splitChunks = {
         ...config.optimization.splitChunks,
         chunks: "all",
+        maxInitialRequests: 25,
+        maxAsyncRequests: 25,
         cacheGroups: {
           ...config.optimization.splitChunks.cacheGroups,
           vendor: {
@@ -48,6 +59,7 @@ const nextConfig: NextConfig = {
             name: "vendors",
             chunks: "all",
             priority: 10,
+            maxSize: 244000,
           },
           common: {
             name: "common",
@@ -55,10 +67,30 @@ const nextConfig: NextConfig = {
             chunks: "all",
             priority: 5,
             reuseExistingChunk: true,
+            maxSize: 244000,
+          },
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: "react",
+            chunks: "all",
+            priority: 20,
+          },
+          lib: {
+            test: /[\\/]src[\\/]lib[\\/]/,
+            name: "lib",
+            chunks: "all",
+            priority: 15,
+            minChunks: 2,
           },
         },
       };
     }
+
+    // Dynamic imports optimization
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": require("path").resolve(__dirname, "src"),
+    };
 
     return config;
   },

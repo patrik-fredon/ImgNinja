@@ -13,10 +13,7 @@ interface HeroSectionProps {
   ctaVariant?: "gradient" | "glassmorphic" | "animated";
 }
 
-export function HeroSection({
-  onGetStarted,
-  ctaVariant = "gradient",
-}: HeroSectionProps) {
+export function HeroSection({ onGetStarted, ctaVariant = "gradient" }: HeroSectionProps) {
   const t = useTranslations();
   const [currentStat, setCurrentStat] = useState(0);
 
@@ -37,8 +34,7 @@ export function HeroSection({
   }, [stats.length]);
 
   const renderCTA = () => {
-    const baseClasses =
-      "px-8 py-4 text-lg font-semibold transition-all duration-300";
+    const baseClasses = "px-8 py-4 text-lg font-semibold transition-all duration-300";
 
     switch (ctaVariant) {
       case "glassmorphic":
@@ -205,18 +201,13 @@ export function HeroSection({
         </div>
 
         {/* Social Proof Statistics */}
-        <div
-          className="mb-12 animate-slide-in-up"
-          style={{ animationDelay: "0.6s" }}
-        >
+        <div className="mb-12 animate-slide-in-up" style={{ animationDelay: "0.6s" }}>
           <GlassCard variant="default" className="p-6 max-w-md mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold bg-gradient-brand bg-clip-text text-transparent mb-2 animate-pulse-glow">
                 {stats[currentStat].number}
               </div>
-              <div className="text-gray-600 text-sm">
-                {stats[currentStat].label}
-              </div>
+              <div className="text-gray-600 text-sm">{stats[currentStat].label}</div>
             </div>
           </GlassCard>
         </div>
@@ -239,10 +230,7 @@ export function HeroSection({
         </div>
 
         {/* Trust Indicators */}
-        <div
-          className="mt-12 animate-slide-in-up"
-          style={{ animationDelay: "1s" }}
-        >
+        <div className="mt-12 animate-slide-in-up" style={{ animationDelay: "1s" }}>
           <Typography variant="body" className="text-gray-500 text-sm mb-4">
             {t("hero.trust.title")}
           </Typography>

@@ -8,14 +8,7 @@ interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
 
 const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
   (
-    {
-      className = "",
-      variant = "default",
-      padding = "md",
-      hover = true,
-      children,
-      ...props
-    },
+    { className = "", variant = "default", padding = "md", hover = true, children, ...props },
     ref
   ) => {
     const baseClasses = "rounded-xl transition-all duration-300 ease-out";
@@ -79,23 +72,17 @@ const GlassCardTitle = forwardRef<HTMLHeadingElement, GlassCardTitleProps>(
 
 GlassCardTitle.displayName = "GlassCardTitle";
 
-interface GlassCardDescriptionProps
-  extends HTMLAttributes<HTMLParagraphElement> {}
+interface GlassCardDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {}
 
-const GlassCardDescription = forwardRef<
-  HTMLParagraphElement,
-  GlassCardDescriptionProps
->(({ className = "", children, ...props }, ref) => {
-  return (
-    <p
-      ref={ref}
-      className={`text-sm text-white/80 drop-shadow-sm ${className}`}
-      {...props}
-    >
-      {children}
-    </p>
-  );
-});
+const GlassCardDescription = forwardRef<HTMLParagraphElement, GlassCardDescriptionProps>(
+  ({ className = "", children, ...props }, ref) => {
+    return (
+      <p ref={ref} className={`text-sm text-white/80 drop-shadow-sm ${className}`} {...props}>
+        {children}
+      </p>
+    );
+  }
+);
 
 GlassCardDescription.displayName = "GlassCardDescription";
 
@@ -118,11 +105,7 @@ interface GlassCardFooterProps extends HTMLAttributes<HTMLDivElement> {}
 const GlassCardFooter = forwardRef<HTMLDivElement, GlassCardFooterProps>(
   ({ className = "", children, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={`mt-4 flex items-center ${className}`}
-        {...props}
-      >
+      <div ref={ref} className={`mt-4 flex items-center ${className}`} {...props}>
         {children}
       </div>
     );
