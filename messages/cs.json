@@ -224,5 +224,70 @@
       "info": "Pro dotazy týkající se soukromí použijte prosím kontaktní informace uvedené na našich webových stránkách."
     },
     "lastUpdated": "Naposledy aktualizováno: říjen 2024"
+  },
+  "errors": {
+    "boundary": {
+      "title": "Něco se pokazilo",
+      "description": "Došlo k neočekávané chybě. Zkuste prosím obnovit stránku nebo kontaktujte podporu, pokud problém přetrvává.",
+      "technicalDetails": "Technické detaily",
+      "retry": "Zkusit znovu",
+      "reload": "Obnovit stránku"
+    },
+    "types": {
+      "validation": {
+        "title": "Chyba validace"
+      },
+      "conversion": {
+        "title": "Chyba konverze"
+      },
+      "browser": {
+        "title": "Kompatibilita prohlížeče"
+      },
+      "network": {
+        "title": "Síťová chyba"
+      },
+      "file": {
+        "title": "Chyba souboru"
+      },
+      "generic": {
+        "title": "Chyba"
+      }
+    },
+    "showDetails": "Zobrazit detaily",
+    "dismiss": "Zavřít",
+    "retry": "Zkusit znovu",
+    "codes": {
+      "INVALID_FILE_TYPE": "Vybraný typ souboru není podporován. Vyberte prosím platný obrázkový soubor (PNG, JPEG, GIF, BMP, TIFF, SVG, WebP, AVIF).",
+      "FILE_TOO_LARGE": "Soubor je příliš velký. Maximální velikost souboru je 50MB.",
+      "INVALID_FILE": "Vybraný soubor je neplatný nebo poškozený. Vyberte prosím jiný obrázek.",
+      "TOO_MANY_FILES": "Vybráno příliš mnoho souborů. Můžete nahrát maximálně 10 souborů najednou.",
+      "CONVERSION_FAILED": "Konverze obrázku selhala. Zkuste to prosím znovu nebo vyberte jiný formát.",
+      "CANVAS_ERROR": "Během konverze došlo k chybě canvas prohlížeče. Zkuste obnovit stránku.",
+      "WORKER_ERROR": "Chyba zpracování na pozadí. Konverze bude pokračovat bez podpory Web Worker.",
+      "MEMORY_ERROR": "Nedostatek paměti pro zpracování tohoto obrázku. Zkuste menší soubor nebo zavřete jiné záložky prohlížeče.",
+      "TIMEOUT_ERROR": "Konverze trvala příliš dlouho a byla zrušena. Zkuste menší obrázek nebo jiný formát.",
+      "UNSUPPORTED_FORMAT": "Tento formát není podporován vaším prohlížečem. Zkuste jiný výstupní formát.",
+      "BROWSER_NOT_SUPPORTED": "Váš prohlížeč nepodporuje požadované funkce. Aktualizujte prosím prohlížeč nebo zkuste jiný.",
+      "FEATURE_NOT_AVAILABLE": "Tato funkce není ve vašem prohlížeči dostupná. Některé funkce mohou být omezené.",
+      "WEBWORKER_NOT_SUPPORTED": "Web Workers nejsou podporovány. Konverze poběží v hlavním vlákně a může být pomalejší.",
+      "FILE_READ_ERROR": "Nelze přečíst vybraný soubor. Zkuste ho prosím vybrat znovu.",
+      "FILE_CORRUPT": "Vybraný soubor se zdá být poškozený nebo poškozen. Zkuste prosím jiný obrázek.",
+      "DOWNLOAD_ERROR": "Stažení převedeného obrázku selhalo. Zkuste to prosím znovu.",
+      "NETWORK_ERROR": "Chyba síťového připojení. Zkontrolujte prosím internetové připojení.",
+      "QUOTA_EXCEEDED": "Překročena kvóta úložiště prohlížeče. Uvolněte prosím místo nebo zavřete jiné záložky.",
+      "PERMISSION_DENIED": "Oprávnění zamítnuto. Povolte prosím požadovaná oprávnění a zkuste to znovu.",
+      "UNKNOWN_ERROR": "Došlo k neočekávané chybě. Zkuste to prosím znovu."
+    },
+    "recovery": {
+      "selectDifferentFile": "Vybrat jiný soubor",
+      "selectSmallerFile": "Vybrat menší soubor",
+      "reduceQuality": "Snížit kvalitu",
+      "clearAllFiles": "Vymazat všechny soubory",
+      "tryAgain": "Zkusit znovu",
+      "tryDownloadAgain": "Zkusit stáhnout znovu",
+      "updateBrowser": "Aktualizovat prohlížeč",
+      "closeOtherTabs": "Zavřít jiné záložky",
+      "changeFormat": "Zkusit {format}"
+    }
   }
 }

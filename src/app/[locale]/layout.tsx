@@ -1,9 +1,20 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
+import { Inter } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ErrorProvider } from "@/lib/errors/context";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { PerformanceMonitor } from "@/components/ui/PerformanceMonitor";
 import "../globals.css";
+
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-inter",
+  preload: true,
+});
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -99,91 +110,6 @@ export async function generateMetadata({
     manifest: "/site.webmanifest",
   };
 }
-
-// Fallback static metadata for build time
-export const metadata: Metadata = {
-  title: {
-    template: "%s | ImgNinja - Free Image Converter",
-    default: "ImgNinja - Free Online Image Converter",
-  },
-  description:
-    "Convert images to WebP, AVIF, PNG, JPEG formats instantly. Fast, free, and completely private - all processing happens in your browser. No uploads, no registration required.",
-  keywords: [
-    "image converter",
-    "webp converter",
-    "avif converter",
-    "png converter",
-    "jpeg converter",
-    "online image tool",
-    "free image converter",
-    "browser image processing",
-    "client-side image conversion",
-    "private image converter",
-    "no upload image converter",
-    "web image optimization",
-    "image format converter",
-    "ImgNinja",
-  ],
-  authors: [{ name: "ImgNinja" }],
-  creator: "ImgNinja",
-  publisher: "ImgNinja",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://imgninja.com"
-  ),
-  alternates: {
-    canonical: "/",
-    languages: {
-      cs: "/cs",
-      en: "/en",
-    },
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    alternateLocale: ["cs_CZ"],
-    title: "ImgNinja - Free Online Image Converter",
-    description:
-      "Convert images to WebP, AVIF, PNG, JPEG formats instantly. Fast, free, and completely private - all processing happens in your browser.",
-    siteName: "ImgNinja",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "ImgNinja - Free Online Image Converter",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "ImgNinja - Free Online Image Converter",
-    description:
-      "Convert images to WebP, AVIF, PNG, JPEG formats instantly. Fast, free, and completely private - all processing happens in your browser.",
-    images: ["/og-image.png"],
-    creator: "@imgninja",
-    site: "@imgninja",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
-  },
-  category: "technology",
-};
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -298,18 +224,69 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={inter.variable}>
       <head>
+        {/* Preload critical resources */}
+        <link
+          rel="preload"
+          href="/fonts/inter-var.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/_next/static/css/app/[locale]/layout.css"
+          as="style"
+        />
+
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//pagead2.googlesyndication.com" />
+
+        {/* Preconnect to critical origins */}
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+
+        {/* Service Worker Registration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `,
+          }}
+        />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body
+        className={`min-h-screen flex flex-col font-sans ${inter.className}`}
+      >
         <NextIntlClientProvider messages={messages}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <ErrorProvider>
+            <ErrorBoundary>
+              <PerformanceMonitor />
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </ErrorBoundary>
+          </ErrorProvider>
         </NextIntlClientProvider>
       </body>
     </html>

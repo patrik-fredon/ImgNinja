@@ -77,7 +77,7 @@ function ErrorFallback({ error, onReset }: ErrorFallbackProps) {
   return (
     <Card className="p-6 border-red-200 bg-red-50">
       <div className="flex items-start space-x-4">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <svg
             className="w-6 h-6 text-red-600"
             fill="none"

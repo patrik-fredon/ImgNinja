@@ -224,5 +224,70 @@
       "info": "For privacy-related inquiries, please use the contact information provided on our website."
     },
     "lastUpdated": "Last updated: October 2024"
+  },
+  "errors": {
+    "boundary": {
+      "title": "Something went wrong",
+      "description": "An unexpected error occurred. Please try refreshing the page or contact support if the problem persists.",
+      "technicalDetails": "Technical Details",
+      "retry": "Try Again",
+      "reload": "Reload Page"
+    },
+    "types": {
+      "validation": {
+        "title": "Validation Error"
+      },
+      "conversion": {
+        "title": "Conversion Error"
+      },
+      "browser": {
+        "title": "Browser Compatibility"
+      },
+      "network": {
+        "title": "Network Error"
+      },
+      "file": {
+        "title": "File Error"
+      },
+      "generic": {
+        "title": "Error"
+      }
+    },
+    "showDetails": "Show Details",
+    "dismiss": "Dismiss",
+    "retry": "Try Again",
+    "codes": {
+      "INVALID_FILE_TYPE": "The selected file type is not supported. Please choose a valid image file (PNG, JPEG, GIF, BMP, TIFF, SVG, WebP, AVIF).",
+      "FILE_TOO_LARGE": "The file is too large. Maximum file size is 50MB.",
+      "INVALID_FILE": "The selected file is invalid or corrupted. Please choose a different image.",
+      "TOO_MANY_FILES": "Too many files selected. You can upload a maximum of 10 files at once.",
+      "CONVERSION_FAILED": "Image conversion failed. Please try again or select a different format.",
+      "CANVAS_ERROR": "A browser canvas error occurred during conversion. Try refreshing the page.",
+      "WORKER_ERROR": "Background processing error. Conversion will continue without Web Worker support.",
+      "MEMORY_ERROR": "Not enough memory to process this image. Try a smaller file or close other browser tabs.",
+      "TIMEOUT_ERROR": "Conversion took too long and was cancelled. Try a smaller image or different format.",
+      "UNSUPPORTED_FORMAT": "This format is not supported by your browser. Try a different output format.",
+      "BROWSER_NOT_SUPPORTED": "Your browser does not support the required features. Please update your browser or try a different one.",
+      "FEATURE_NOT_AVAILABLE": "This feature is not available in your browser. Some functionality may be limited.",
+      "WEBWORKER_NOT_SUPPORTED": "Web Workers are not supported. Conversion will run on the main thread and may be slower.",
+      "FILE_READ_ERROR": "Could not read the selected file. Please try selecting it again.",
+      "FILE_CORRUPT": "The selected file appears to be corrupted or damaged. Please try a different image.",
+      "DOWNLOAD_ERROR": "Failed to download the converted image. Please try again.",
+      "NETWORK_ERROR": "Network connection error. Please check your internet connection.",
+      "QUOTA_EXCEEDED": "Browser storage quota exceeded. Please clear some space or close other tabs.",
+      "PERMISSION_DENIED": "Permission denied. Please allow the required permissions and try again.",
+      "UNKNOWN_ERROR": "An unexpected error occurred. Please try again."
+    },
+    "recovery": {
+      "selectDifferentFile": "Select Different File",
+      "selectSmallerFile": "Select Smaller File",
+      "reduceQuality": "Reduce Quality",
+      "clearAllFiles": "Clear All Files",
+      "tryAgain": "Try Again",
+      "tryDownloadAgain": "Try Download Again",
+      "updateBrowser": "Update Browser",
+      "closeOtherTabs": "Close Other Tabs",
+      "changeFormat": "Try {format}"
+    }
   }
 }

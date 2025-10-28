@@ -94,7 +94,7 @@ export function ErrorDisplay({
   return (
     <Card className={`p-4 ${colors.bg} ${colors.border}`}>
       <div className="flex items-start space-x-3">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <svg
             className={`w-5 h-5 ${colors.icon}`}
             fill="none"
@@ -134,7 +134,7 @@ export function ErrorDisplay({
               <Button
                 key={index}
                 onClick={action.action}
-                variant={action.variant === "primary" ? "default" : "outline"}
+                variant={action.variant === "primary" ? "primary" : "outline"}
                 size="sm"
                 className={
                   action.variant === "primary"
@@ -162,7 +162,7 @@ export function ErrorDisplay({
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className={`flex-shrink-0 ${colors.text} hover:opacity-75`}
+            className={`shrink-0 ${colors.text} hover:opacity-75`}
             aria-label={t("dismiss")}
           >
             <svg

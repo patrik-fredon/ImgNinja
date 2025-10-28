@@ -1,22 +1,30 @@
 "use client";
 
-import { useReducer, useCallback, useEffect, useState } from "react";
+import {
+  useReducer,
+  useCallback,
+  useEffect,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import { useTranslations } from "next-intl";
 import { FileUpload } from "@/components/converter/FileUpload";
-import { FormatSelector } from "@/components/converter/FormatSelector";
-import { QualityControl } from "@/components/converter/QualityControl";
-import {
-  ConversionQueue,
-  type ConversionItem,
-} from "@/components/converter/ConversionQueue";
-import {
-  DownloadButton,
-  type DownloadableFile,
-} from "@/components/converter/DownloadButton";
+import { LazyFormatSelector } from "@/components/converter/LazyFormatSelector";
+import { LazyQualityControl } from "@/components/converter/LazyQualityControl";
+import { LazyConversionQueue } from "@/components/converter/LazyConversionQueue";
+import type { ConversionItem } from "@/components/converter/ConversionQueue";
+import type { DownloadableFile } from "@/components/converter/DownloadButton";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { ImageConverter } from "@/lib/converter/engine";
+import { ErrorList } from "@/components/ui/ErrorList";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { OutputFormat } from "@/types/formats";
+import { useErrorHandler, useErrors } from "@/lib/errors/context";
+import { validateFiles } from "@/lib/converter/validation";
+import { ImageConverterError } from "@/lib/errors/types";
+
+// Dynamic import for ImageConverter will be handled in useEffect
 
 interface ConversionState {
   selectedFiles: File[];
@@ -133,11 +141,28 @@ function conversionReducer(
 export default function Home() {
   const t = useTranslations();
   const [state, dispatch] = useReducer(conversionReducer, initialState);
-  const [converter] = useState(() => new ImageConverter());
+  const [converter, setConverter] = useState<any>(null);
+  const [isConverterLoading, setIsConverterLoading] = useState(true);
+
+  // Initialize converter lazily
+  useEffect(() => {
+    const initConverter = async () => {
+      try {
+        const { ImageConverter } = await import("@/lib/converter/engine");
+        setConverter(new ImageConverter());
+      } catch (error) {
+        console.error("Failed to load ImageConverter:", error);
+      } finally {
+        setIsConverterLoading(false);
+      }
+    };
+
+    initConverter();
+  }, []);
 
   // Estimate size when format or quality changes
   useEffect(() => {
-    if (state.selectedFiles.length > 0) {
+    if (state.selectedFiles.length > 0 && converter) {
       const estimateSize = async () => {
         try {
           const file = state.selectedFiles[0]; // Use first file for estimation
@@ -147,7 +172,12 @@ export default function Home() {
           });
           dispatch({ type: "SET_ESTIMATED_SIZE", size });
         } catch (error) {
-          console.error("Size estimation failed:", error);
+          // Size estimation errors are not critical, just log them
+          if (error instanceof ImageConverterError) {
+            console.warn("Size estimation failed:", error.message);
+          } else {
+            console.warn("Size estimation failed:", error);
+          }
         }
       };
 
@@ -155,9 +185,49 @@ export default function Home() {
     }
   }, [state.selectedFiles, state.outputFormat, state.quality, converter]);
 
-  const handleFilesSelected = useCallback((files: File[]) => {
-    dispatch({ type: "SET_FILES", files });
-  }, []);
+  const { handleValidationError } = useErrorHandler();
+  const { clearErrors } = useErrors();
+
+  const handleFilesSelected = useCallback(
+    (files: File[]) => {
+      // Clear previous errors when new files are selected
+      clearErrors();
+
+      // Validate files before setting them
+      const validationResults = validateFiles(files);
+      const hasErrors = validationResults.some((result) => !result.valid);
+
+      if (hasErrors) {
+        // Find the first error and display it
+        const firstError = validationResults.find(
+          (result) => !result.valid
+        )?.error;
+        if (firstError) {
+          handleValidationError(firstError, {
+            onSelectDifferentFile: () => {
+              // Clear files and errors
+              dispatch({ type: "SET_FILES", files: [] });
+              clearErrors();
+            },
+            onClearFiles: () => {
+              dispatch({ type: "SET_FILES", files: [] });
+              clearErrors();
+            },
+            onReduceQuality: () => {
+              dispatch({
+                type: "SET_QUALITY",
+                quality: Math.max(10, state.quality - 20),
+              });
+            },
+          });
+        }
+        return;
+      }
+
+      dispatch({ type: "SET_FILES", files });
+    },
+    [handleValidationError, clearErrors, state.quality]
+  );
 
   const handleFormatChange = useCallback((format: OutputFormat) => {
     dispatch({ type: "SET_FORMAT", format });
@@ -168,7 +238,7 @@ export default function Home() {
   }, []);
 
   const handleStartConversion = useCallback(async () => {
-    if (state.selectedFiles.length === 0) return;
+    if (state.selectedFiles.length === 0 || !converter) return;
 
     dispatch({ type: "START_CONVERSION" });
 
@@ -199,7 +269,7 @@ export default function Home() {
             format: state.outputFormat,
             quality: state.quality,
           },
-          (progress) => {
+          (progress: number) => {
             dispatch({
               type: "UPDATE_CONVERSION_ITEM",
               id: itemId,
@@ -219,15 +289,20 @@ export default function Home() {
           },
         });
       } catch (error) {
+        let errorMessage = t("converter.errors.conversionFailed");
+
+        if (error instanceof ImageConverterError) {
+          errorMessage = error.message;
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+
         dispatch({
           type: "UPDATE_CONVERSION_ITEM",
           id: itemId,
           updates: {
             status: "error",
-            error:
-              error instanceof Error
-                ? error.message
-                : t("converter.errors.conversionFailed"),
+            error: errorMessage,
           },
         });
       }
@@ -239,43 +314,34 @@ export default function Home() {
   }, []);
 
   const handleDownloadItem = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const item = state.conversionItems.find((item) => item.id === id);
       if (item && item.outputBlob) {
-        const downloadableFile: DownloadableFile = {
-          id: item.id,
-          originalName: item.file.name,
-          outputFormat: item.outputFormat,
-          blob: item.outputBlob,
-        };
+        try {
+          const { FORMATS } = await import("@/lib/converter/formats");
 
-        // Create temporary DownloadButton to trigger download
-        const tempButton = document.createElement("div");
-        document.body.appendChild(tempButton);
+          const formatData = FORMATS[item.outputFormat];
+          const nameWithoutExt = item.file.name.replace(/\.[^/.]+$/, "");
+          const fileName = `${nameWithoutExt}${formatData.extension}`;
+          const url = URL.createObjectURL(item.outputBlob);
 
-        // Use the DownloadButton logic directly
-        const formatData = require("@/lib/converter/formats").FORMATS[
-          item.outputFormat
-        ];
-        const nameWithoutExt = item.file.name.replace(/\.[^/.]+$/, "");
-        const fileName = `${nameWithoutExt}${formatData.extension}`;
-        const url = URL.createObjectURL(item.outputBlob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        document.body.removeChild(tempButton);
-
-        setTimeout(() => URL.revokeObjectURL(url), 100);
+          setTimeout(() => URL.revokeObjectURL(url), 100);
+        } catch (error) {
+          console.error("Failed to download file:", error);
+        }
       }
     },
     [state.conversionItems]
   );
 
-  const handleDownloadAll = useCallback(() => {
+  const handleDownloadAll = useCallback(async () => {
     const completedItems = state.conversionItems.filter(
       (item) => item.status === "complete" && item.outputBlob
     );
@@ -291,43 +357,44 @@ export default function Home() {
       })
     );
 
-    // Create temporary DownloadButton to trigger download
-    const tempButton = document.createElement("div");
-    document.body.appendChild(tempButton);
+    try {
+      // Dynamically import JSZip and formats
+      const [{ default: JSZip }, { FORMATS }] = await Promise.all([
+        import("jszip"),
+        import("@/lib/converter/formats"),
+      ]);
 
-    // Use DownloadButton logic for multiple files
-    import("jszip").then(({ default: JSZip }) => {
       const zip = new JSZip();
-      const formatData = require("@/lib/converter/formats").FORMATS;
 
       downloadableFiles.forEach((file) => {
         const nameWithoutExt = file.originalName.replace(/\.[^/.]+$/, "");
         const fileName = `${nameWithoutExt}${
-          formatData[file.outputFormat].extension
+          FORMATS[file.outputFormat].extension
         }`;
         zip.file(fileName, file.blob);
       });
 
-      zip.generateAsync({ type: "blob" }).then((zipBlob) => {
-        const url = URL.createObjectURL(zipBlob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "converted-images.zip";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        document.body.removeChild(tempButton);
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "converted-images.zip";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-        setTimeout(() => URL.revokeObjectURL(url), 100);
-      });
-    });
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    } catch (error) {
+      console.error("Failed to create ZIP file:", error);
+    }
   }, [state.conversionItems]);
 
   const completedItems = state.conversionItems.filter(
     (item) => item.status === "complete"
   );
   const hasFiles = state.selectedFiles.length > 0;
-  const canStartConversion = hasFiles && !state.isConverting;
+  const canStartConversion =
+    hasFiles && !state.isConverting && converter && !isConverterLoading;
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -362,6 +429,9 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Error Display */}
+          <ErrorList />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -372,7 +442,7 @@ export default function Home() {
 
             {/* Format Selection */}
             {hasFiles && (
-              <FormatSelector
+              <LazyFormatSelector
                 selectedFormat={state.outputFormat}
                 onFormatChange={handleFormatChange}
               />
@@ -380,7 +450,7 @@ export default function Home() {
 
             {/* Quality Control */}
             {hasFiles && (
-              <QualityControl
+              <LazyQualityControl
                 quality={state.quality}
                 onQualityChange={handleQualityChange}
                 format={state.outputFormat}
@@ -391,17 +461,21 @@ export default function Home() {
             {/* Convert Button */}
             {hasFiles && (
               <div className="flex justify-center">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  onClick={handleStartConversion}
-                  disabled={!canStartConversion}
-                  className="px-8 py-3"
-                >
-                  {state.isConverting
-                    ? t("common.processing")
-                    : t("converter.title")}
-                </Button>
+                {isConverterLoading ? (
+                  <LoadingSkeleton variant="button" className="w-32 h-12" />
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={handleStartConversion}
+                    disabled={!canStartConversion}
+                    className="px-8 py-3"
+                  >
+                    {state.isConverting
+                      ? t("common.processing")
+                      : t("converter.title")}
+                  </Button>
+                )}
               </div>
             )}
           </div>
@@ -409,7 +483,7 @@ export default function Home() {
           {/* Right Column - Conversion Queue */}
           <div className="space-y-6">
             {state.conversionItems.length > 0 && (
-              <ConversionQueue
+              <LazyConversionQueue
                 items={state.conversionItems}
                 onRemove={handleRemoveItem}
                 onDownload={handleDownloadItem}
