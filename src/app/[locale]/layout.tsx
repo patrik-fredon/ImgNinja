@@ -27,7 +27,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://imgninja.com";
+  const baseUrl = process.env["NEXT_PUBLIC_SITE_URL"] || "https://imgninja.com";
   const currentUrl = `${baseUrl}/${locale}`;
 
   return {
@@ -92,7 +92,7 @@ export async function generateMetadata({
       },
     },
     verification: {
-      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+      google: process.env["NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION"],
     },
     category: "technology",
     icons: {
@@ -123,7 +123,7 @@ export default async function RootLayout({
   const { locale } = await params;
   const messages = await getMessages();
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://imgninja.com";
+  const baseUrl = process.env["NEXT_PUBLIC_SITE_URL"] || "https://imgninja.com";
 
   const jsonLd = {
     "@context": "https://schema.org",
