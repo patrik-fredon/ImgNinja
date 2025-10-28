@@ -1,6 +1,103 @@
 {
   "common": {
     "title": "Image Converter",
-    "description": "Free online image converter"
+    "description": "Free online image converter",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "close": "Close",
+    "download": "Download",
+    "downloadAll": "Download All",
+    "remove": "Remove",
+    "retry": "Retry",
+    "select": "Select",
+    "upload": "Upload",
+    "processing": "Processing...",
+    "complete": "Complete",
+    "pending": "Pending",
+    "failed": "Failed"
+  },
+  "converter": {
+    "title": "Image Converter",
+    "subtitle": "Fast, free, and private - all processing happens in your browser",
+    "upload": {
+      "title": "Upload Images",
+      "dragDrop": "Drag and drop images here",
+      "orClick": "or click to browse",
+      "maxFiles": "Maximum {count} files",
+      "supportedFormats": "Supported formats: PNG, JPEG, GIF, BMP, TIFF, SVG"
+    },
+    "format": {
+      "title": "Select Output Format",
+      "selectFormat": "Select Format"
+    },
+    "quality": {
+      "title": "Quality",
+      "label": "Quality: {value}%",
+      "estimated": "Estimated size: {size}"
+    },
+    "queue": {
+      "title": "Conversion Queue",
+      "empty": "No files to convert",
+      "status": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "complete": "Complete",
+        "error": "Error"
+      }
+    },
+    "errors": {
+      "invalidType": "Unsupported file type",
+      "tooLarge": "File exceeds 50MB limit",
+      "conversionFailed": "Conversion failed",
+      "loadFailed": "Failed to load file",
+      "unsupportedFormat": "Unsupported format",
+      "browserNotSupported": "Your browser does not support this format"
+    }
+  },
+  "formats": {
+    "webp": {
+      "name": "WebP",
+      "description": "Modern format with excellent compression",
+      "useCase": "Best for web images with transparency"
+    },
+    "avif": {
+      "name": "AVIF",
+      "description": "Next-gen format with superior compression",
+      "useCase": "Best compression for modern browsers"
+    },
+    "png": {
+      "name": "PNG",
+      "description": "Lossless format with transparency support",
+      "useCase": "Best for graphics and images requiring transparency"
+    },
+    "jpeg": {
+      "name": "JPEG",
+      "description": "Widely supported lossy format",
+      "useCase": "Best for photos and images without transparency"
+    },
+    "gif": {
+      "name": "GIF",
+      "description": "Format with animation support",
+      "useCase": "Best for simple animations"
+    }
+  },
+  "layout": {
+    "header": {
+      "home": "Home",
+      "formats": "Formats",
+      "privacy": "Privacy",
+      "language": "Language"
+    },
+    "footer": {
+      "copyright": "© {year} Image Converter. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "formats": "Format Information"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "notice": "Your images never leave your device. All processing happens locally in your browser. We don't store or transmit your files."
   }
 }

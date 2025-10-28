@@ -1,6 +1,103 @@
 {
   "common": {
     "title": "Konvertor obrázků",
-    "description": "Zdarma online konvertor obrázků"
+    "description": "Zdarma online konvertor obrázků",
+    "loading": "Načítání...",
+    "error": "Chyba",
+    "success": "Úspěch",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "download": "Stáhnout",
+    "downloadAll": "Stáhnout vše",
+    "remove": "Odstranit",
+    "retry": "Zkusit znovu",
+    "select": "Vybrat",
+    "upload": "Nahrát",
+    "processing": "Zpracování...",
+    "complete": "Dokončeno",
+    "pending": "Čeká",
+    "failed": "Selhalo"
+  },
+  "converter": {
+    "title": "Konvertor obrázků",
+    "subtitle": "Rychlý, bezplatný a soukromý - vše se zpracovává ve vašem prohlížeči",
+    "upload": {
+      "title": "Nahrát obrázky",
+      "dragDrop": "Přetáhněte obrázky sem",
+      "orClick": "nebo klikněte pro výběr",
+      "maxFiles": "Maximum {count} souborů",
+      "supportedFormats": "Podporované formáty: PNG, JPEG, GIF, BMP, TIFF, SVG"
+    },
+    "format": {
+      "title": "Vyberte výstupní formát",
+      "selectFormat": "Vybrat formát"
+    },
+    "quality": {
+      "title": "Kvalita",
+      "label": "Kvalita: {value}%",
+      "estimated": "Odhadovaná velikost: {size}"
+    },
+    "queue": {
+      "title": "Fronta konverze",
+      "empty": "Žádné soubory k převodu",
+      "status": {
+        "pending": "Čeká",
+        "processing": "Zpracovává se",
+        "complete": "Dokončeno",
+        "error": "Chyba"
+      }
+    },
+    "errors": {
+      "invalidType": "Nepodporovaný typ souboru",
+      "tooLarge": "Soubor překračuje limit 50MB",
+      "conversionFailed": "Konverze selhala",
+      "loadFailed": "Načtení souboru selhalo",
+      "unsupportedFormat": "Nepodporovaný formát",
+      "browserNotSupported": "Váš prohlížeč nepodporuje tento formát"
+    }
+  },
+  "formats": {
+    "webp": {
+      "name": "WebP",
+      "description": "Moderní formát s vynikající kompresí",
+      "useCase": "Nejlepší pro webové obrázky s průhledností"
+    },
+    "avif": {
+      "name": "AVIF",
+      "description": "Formát nové generace s vynikající kompresí",
+      "useCase": "Nejlepší komprese pro moderní prohlížeče"
+    },
+    "png": {
+      "name": "PNG",
+      "description": "Bezztrátový formát s podporou průhlednosti",
+      "useCase": "Nejlepší pro grafiku a obrázky vyžadující průhlednost"
+    },
+    "jpeg": {
+      "name": "JPEG",
+      "description": "Široce podporovaný ztrátový formát",
+      "useCase": "Nejlepší pro fotografie a obrázky bez průhlednosti"
+    },
+    "gif": {
+      "name": "GIF",
+      "description": "Formát s podporou animací",
+      "useCase": "Nejlepší pro jednoduché animace"
+    }
+  },
+  "layout": {
+    "header": {
+      "home": "Domů",
+      "formats": "Formáty",
+      "privacy": "Soukromí",
+      "language": "Jazyk"
+    },
+    "footer": {
+      "copyright": "© {year} Konvertor obrázků. Všechna práva vyhrazena.",
+      "privacy": "Zásady ochrany osobních údajů",
+      "formats": "Informace o formátech"
+    }
+  },
+  "privacy": {
+    "title": "Zásady ochrany osobních údajů",
+    "notice": "Vaše obrázky nikdy neopustí vaše zařízení. Veškeré zpracování probíhá lokálně ve vašem prohlížeči. Neukládáme ani nepřenášíme vaše soubory."
   }
 }
