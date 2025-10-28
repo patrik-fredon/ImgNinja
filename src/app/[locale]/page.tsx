@@ -398,22 +398,25 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {/* Page Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
             {t("converter.title")}
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 px-2">
             {t("converter.subtitle")}
           </p>
 
           {/* Privacy Notice */}
-          <Card variant="outlined" className="bg-blue-50 border-blue-200 mb-8">
-            <CardContent className="p-4">
+          <Card
+            variant="outlined"
+            className="bg-blue-50 border-blue-200 mb-6 sm:mb-8 mx-2 sm:mx-0"
+          >
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center justify-center space-x-2 text-blue-800">
                 <svg
-                  className="w-5 h-5"
+                  className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -425,7 +428,9 @@ export default function Home() {
                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
                 </svg>
-                <p className="text-sm font-medium">{t("privacy.notice")}</p>
+                <p className="text-xs sm:text-sm font-medium text-center">
+                  {t("privacy.notice")}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -434,9 +439,9 @@ export default function Home() {
           <ErrorList />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Left Column - Upload and Settings */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* File Upload */}
             <FileUpload onFilesSelected={handleFilesSelected} maxFiles={10} />
 
@@ -460,7 +465,7 @@ export default function Home() {
 
             {/* Convert Button */}
             {hasFiles && (
-              <div className="flex justify-center">
+              <div className="flex justify-center px-4 sm:px-0">
                 {isConverterLoading ? (
                   <LoadingSkeleton variant="button" className="w-32 h-12" />
                 ) : (
@@ -469,7 +474,7 @@ export default function Home() {
                     size="lg"
                     onClick={handleStartConversion}
                     disabled={!canStartConversion}
-                    className="px-8 py-3"
+                    className="px-6 sm:px-8 py-3 w-full sm:w-auto max-w-xs touch-manipulation min-h-[48px]"
                   >
                     {state.isConverting
                       ? t("common.processing")
@@ -481,7 +486,7 @@ export default function Home() {
           </div>
 
           {/* Right Column - Conversion Queue */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {state.conversionItems.length > 0 && (
               <LazyConversionQueue
                 items={state.conversionItems}

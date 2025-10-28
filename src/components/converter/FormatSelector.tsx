@@ -34,7 +34,7 @@ export function FormatSelector({
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-lg font-semibold mb-2">
+        <h3 className="text-base sm:text-lg font-semibold mb-2">
           {t("converter.format.title")}
         </h3>
         <p className="text-sm text-gray-600 mb-4">
@@ -42,7 +42,7 @@ export function FormatSelector({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {supportedFormats.map((format) => {
           const formatData = FORMATS[format];
           const isSelected = selectedFormat === format;
@@ -52,7 +52,7 @@ export function FormatSelector({
             <Card
               key={format}
               variant="outlined"
-              className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+              className={`cursor-pointer transition-all duration-200 hover:shadow-md touch-manipulation ${
                 isSelected
                   ? "ring-2 ring-blue-500 border-blue-500 bg-blue-50"
                   : "hover:border-gray-300"
@@ -61,7 +61,7 @@ export function FormatSelector({
             >
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">
+                  <CardTitle className="text-sm sm:text-base">
                     {t(`formats.${format}.name`)}
                   </CardTitle>
                   {isRecommended && (
@@ -73,7 +73,7 @@ export function FormatSelector({
               </CardHeader>
 
               <CardContent className="pt-0">
-                <CardDescription className="mb-3">
+                <CardDescription className="mb-3 text-xs sm:text-sm">
                   {t(`formats.${format}.description`)}
                 </CardDescription>
 

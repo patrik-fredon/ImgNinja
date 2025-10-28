@@ -136,12 +136,17 @@ export function ConversionQueue({
     <div className={className}>
       <Card variant="outlined">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
+            <CardTitle className="text-sm sm:text-base">
               {t("converter.queue.title")} ({items.length})
             </CardTitle>
             {hasMultipleCompleted && (
-              <Button variant="primary" size="sm" onClick={onDownloadAll}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={onDownloadAll}
+                className="touch-manipulation min-h-[44px] w-full sm:w-auto"
+              >
                 {t("converter.queue.downloadAll")}
               </Button>
             )}
@@ -150,11 +155,11 @@ export function ConversionQueue({
 
         <CardContent className="space-y-4">
           {items.map((item) => (
-            <Card key={item.id} variant="outlined" className="p-4">
+            <Card key={item.id} variant="outlined" className="p-3 sm:p-4">
               <div className="space-y-3">
                 {/* File info header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
+                  <div className="flex items-center space-x-3 min-w-0 flex-1">
                     {getStatusIcon(item.status)}
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900 truncate">
@@ -175,12 +180,13 @@ export function ConversionQueue({
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 w-full sm:w-auto">
                     {item.status === "complete" && (
                       <Button
                         variant="primary"
                         size="sm"
                         onClick={() => onDownload(item.id)}
+                        className="touch-manipulation min-h-[44px] flex-1 sm:flex-none"
                       >
                         {t("common.download")}
                       </Button>
@@ -189,6 +195,7 @@ export function ConversionQueue({
                       variant="ghost"
                       size="sm"
                       onClick={() => onRemove(item.id)}
+                      className="touch-manipulation min-h-[44px] min-w-[44px]"
                     >
                       {t("common.remove")}
                     </Button>

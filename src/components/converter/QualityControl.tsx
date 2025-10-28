@@ -60,13 +60,13 @@ export function QualityControl({
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">
+        <CardTitle className="text-sm sm:text-base">
           {t("converter.quality.title")}
         </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label
               htmlFor="quality-slider"
@@ -74,7 +74,9 @@ export function QualityControl({
             >
               {t("converter.quality.label", { value: localQuality })}
             </label>
-            <span className="text-sm text-gray-500">{localQuality}%</span>
+            <span className="text-sm text-gray-500 font-mono">
+              {localQuality}%
+            </span>
           </div>
 
           <input
@@ -84,7 +86,7 @@ export function QualityControl({
             max="100"
             value={localQuality}
             onChange={handleQualityChange}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-3 sm:h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider touch-manipulation"
             style={{
               background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${localQuality}%, #e5e7eb ${localQuality}%, #e5e7eb 100%)`,
             }}

@@ -165,16 +165,16 @@ export function FileUpload({
         }`}
       >
         <CardContent
-          className="p-8 text-center cursor-pointer"
+          className="p-6 sm:p-8 text-center cursor-pointer touch-manipulation"
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={handleBrowseClick}
         >
-          <div className="space-y-4">
-            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center">
               <svg
-                className="w-8 h-8 text-gray-400"
+                className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -189,7 +189,7 @@ export function FileUpload({
             </div>
 
             <div>
-              <p className="text-lg font-medium text-gray-900">
+              <p className="text-base sm:text-lg font-medium text-gray-900">
                 {t("converter.upload.dragDrop")}
               </p>
               <p className="text-sm text-gray-500 mt-1">
@@ -221,21 +221,21 @@ export function FileUpload({
       )}
 
       {selectedFiles.length > 0 && (
-        <div className="mt-6 space-y-3">
-          <h3 className="text-lg font-medium text-gray-900">
+        <div className="mt-4 sm:mt-6 space-y-3">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">
             {t("converter.upload.title")} ({selectedFiles.length})
           </h3>
 
           <div className="grid gap-3">
             {selectedFiles.map((fileWithPreview, index) => (
-              <Card key={index} variant="outlined" className="p-4">
-                <div className="flex items-center space-x-4">
+              <Card key={index} variant="outlined" className="p-3 sm:p-4">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   {fileWithPreview.preview && !fileWithPreview.error && (
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <img
                         src={fileWithPreview.preview}
                         alt={fileWithPreview.file.name}
-                        className="w-16 h-16 object-cover rounded-md"
+                        className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-md"
                       />
                     </div>
                   )}
@@ -266,7 +266,7 @@ export function FileUpload({
                       e.stopPropagation();
                       handleRemoveFile(index);
                     }}
-                    className="flex-shrink-0"
+                    className="shrink-0 touch-manipulation min-w-[44px] min-h-[44px]"
                   >
                     {t("common.remove")}
                   </Button>

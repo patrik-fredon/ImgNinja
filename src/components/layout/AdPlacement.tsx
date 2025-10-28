@@ -15,11 +15,11 @@ interface AdDimensions {
   height: number;
 }
 
-// Ad slot configurations with fixed dimensions to prevent layout shift
+// Ad slot configurations with responsive dimensions to prevent layout shift
 const AD_SLOT_CONFIG: Record<AdSlotType, AdDimensions> = {
-  header: { width: 728, height: 90 }, // Leaderboard
+  header: { width: 320, height: 50 }, // Mobile Banner (320x50) - responsive to larger sizes
   sidebar: { width: 300, height: 250 }, // Medium Rectangle
-  footer: { width: 728, height: 90 }, // Leaderboard
+  footer: { width: 320, height: 50 }, // Mobile Banner (320x50) - responsive to larger sizes
 };
 
 // Google Ads script loading state
@@ -144,8 +144,12 @@ export function AdPlacement({
   if (hasError) {
     return (
       <div
-        className={`flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md ${className}`}
-        style={{ width: dimensions.width, height: dimensions.height }}
+        className={`flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md w-full max-w-full ${className}`}
+        style={{
+          minWidth: Math.min(dimensions.width, 320),
+          minHeight: dimensions.height,
+          maxWidth: slot === "sidebar" ? dimensions.width : "100%",
+        }}
       >
         <span className="text-xs text-gray-400">Ad failed to load</span>
       </div>
@@ -156,31 +160,40 @@ export function AdPlacement({
   if (isLoading) {
     return (
       <div
-        className={`flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md animate-pulse ${className}`}
-        style={{ width: dimensions.width, height: dimensions.height }}
+        className={`flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md animate-pulse w-full max-w-full ${className}`}
+        style={{
+          minWidth: Math.min(dimensions.width, 320),
+          minHeight: dimensions.height,
+          maxWidth: slot === "sidebar" ? dimensions.width : "100%",
+        }}
       >
         <div className="flex flex-col items-center space-y-2">
-          <div className="w-8 h-8 bg-gray-300 rounded animate-pulse"></div>
+          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-300 rounded animate-pulse"></div>
           <span className="text-xs text-gray-400">Loading ad...</span>
         </div>
       </div>
     );
   }
 
-  // Render actual ad
+  // Render actual ad with responsive container
   return (
     <div
-      className={`flex items-center justify-center ${className}`}
-      style={{ width: dimensions.width, height: dimensions.height }}
+      className={`flex items-center justify-center w-full max-w-full ${className}`}
+      style={{
+        minWidth: Math.min(dimensions.width, 320),
+        minHeight: dimensions.height,
+        maxWidth: slot === "sidebar" ? dimensions.width : "100%",
+      }}
     >
       {adUnitId ? (
         <ins
           ref={adRef}
-          className="adsbygoogle"
+          className="adsbygoogle w-full"
           style={{
-            display: "inline-block",
-            width: dimensions.width,
-            height: dimensions.height,
+            display: "block",
+            minWidth: Math.min(dimensions.width, 320),
+            minHeight: dimensions.height,
+            maxWidth: slot === "sidebar" ? dimensions.width : "100%",
           }}
           data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID}
           data-ad-slot={adUnitId}
@@ -189,8 +202,10 @@ export function AdPlacement({
         />
       ) : (
         // Fallback placeholder when no ad unit ID is provided
-        <div className="flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md w-full h-full">
-          <span className="text-sm text-gray-500">Advertisement</span>
+        <div className="flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md w-full h-full min-h-[50px]">
+          <span className="text-xs sm:text-sm text-gray-500">
+            Advertisement
+          </span>
         </div>
       )}
     </div>
